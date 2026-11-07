@@ -1,0 +1,92 @@
+#!/usr/bin/env python3
+"""Apply the PixaShop product overlay to a clean, pinned PhotoCraft checkout.
+
+Keep internal crate identifiers and .pcraft compatibility. No upstream update binaries,
+branding services, or signing identities are used in the finished product.
+"""
+from pathlib import Path
+import shutil
+import sys
+import re
+
+ROOT = Path(__file__).resolve().parent.parent
+
+def patch(path, old, new):
+    p = ROOT / path
+    text = p.read_text()
+    if new in text:
+        return
+    if old not in text:
+        raise RuntimeError(f'Upstream changed the integration point: {path}')
+    p.write_text(text.replace(old, new))
+
+def prepare():
+    # Display strings and translated catalogs; preserve contributor credits and legal notices.
+    for parent in ['apps', 'crates', 'packaging']:
+        for p in (ROOT / parent).rglob('*'):
+            if p.is_file() and p.suffix in {'.rs', '.tsv', '.html', '.in', '.xml', '.desktop', '.wxs', '.wxl', '.ps1', '.sh', '.txt'}:
+                if any(x in p.name.lower() for x in ['license', 'attribution', 'notice']) or 'credits' in p.parts:
+                    continue
+                try:
+                    text = p.read_text()
+                except UnicodeDecodeError:
+                    continue
+                # Keep authorship/copyright truthful while changing product-facing text.
+                text = '\n'.join(line if 'copyright' in line.lower() else line.replace('PhotoCraft', 'PixaShop').replace('"Photocraft"', '"PixaShop"') for line in text.split('\n'))
+                text = text.replace('ai.storyteller.photocraft', 'com.aiwebdesignfirm.pixashop')
+                text = text.replace('Learning Machines LLC', 'AIWebDesignFirm')
+                p.write_text(text)
+    for p in (ROOT / 'pixashop/overlay').rglob('*'):
+        if p.is_file():
+            target = ROOT / p.relative_to(ROOT / 'pixashop/overlay')
+            target.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(p, target)
+    patch('apps/photocraft/src/main.rs', 'mod updates;', 'mod updates;\nmod access;')
+    patch('apps/photocraft/src/main.rs', 'Ok(Box::new(app))', 'Ok(Box::new(access::AccessApp::new(app)))')
+    # Upstream's restart helper has a different bundle identity. Updates are offered as our
+    # own OS installer downloads until a separately signed PixaShop updater is released.
+    p = ROOT / 'apps/photocraft/src/main.rs'
+    text = p.read_text()
+    text = re.sub(r'    #\[cfg\(not\(target_arch = "wasm32"\)\)\]\n    if let Some\(done\) = craft_update::self_update::finish\([\s\S]*?\n    }\n', '', text, count=1)
+    p.write_text(text)
+    # Own update metadata and no inherited developer or release identities.
+    p = ROOT / 'crates/ui-egui/src/lib.rs'
+    text = p.read_text().replace('..craft_update::suite::PHOTOCRAFT', 'developer: "AIWebDesignFirm",\n    ..craft_update::app::App::new("pixashop", "PixaShop", "Image editing", "lukeybird/pixashop")')
+    p.write_text(text)
+    for rel in ['crates/engine/src/cmd/updates_cmds.rs', 'crates/ui-egui/src/updates_ui.rs']:
+        p = ROOT / rel
+        p.write_text(p.read_text().replace('https://github.com/storytold/photocraft/releases', 'https://github.com/lukeybird/pixashop/releases'))
+    p = ROOT / 'crates/ui-egui/src/links.rs'
+    text = p.read_text().replace('https://discord.gg/artcraft', 'https://aiwebdesignfirm.com/account')
+    text = text.replace('https://getartcraft.com/apps/photocraft', 'https://aiwebdesignfirm.com/pixashop')
+    text = text.replace('https://getartcraft.com/tutorials', 'https://aiwebdesignfirm.com/pixashop')
+    text = text.replace('https://getartcraft.com', 'https://aiwebdesignfirm.com')
+    text = text.replace('https://github.com/storytold/photocraft', 'https://github.com/lukeybird/pixashop')
+    text = text.replace('Join us on Discord', 'Manage your account').replace('tl!("ArtCraft")', '"AIWebDesignFirm"')
+    p.write_text(text)
+    # Do not send customers to the upstream community or display its promotional brand marks.
+    for p in (ROOT / 'crates/ui-egui/src').rglob('*.rs'):
+        if 'credits' in p.parts:
+            continue
+        text = p.read_text().replace('Join the ArtCraft Discord', 'Manage your AIWebDesignFirm account').replace('ArtCraft Website', 'AIWebDesignFirm Website')
+        p.write_text(text)
+    patch('apps/photocraft/Cargo.toml', 'craft-update = { workspace = true }', 'craft-update = { workspace = true }\nureq = { version = "3.4", features = ["json"] }')
+    # Keep preferences/recovery separate from an existing upstream installation.
+    p = ROOT / 'apps/photocraft/src/app_dirs.rs'
+    p.write_text(p.read_text().replace('"photocraft"', '"pixashop"').replace('PHOTOCRAFT_CONFIG_DIR', 'PIXASHOP_CONFIG_DIR'))
+    # The commercial desktop does not expose an unauthenticated automation surface.
+    patch('apps/photocraft/src/main.rs',
+          '    let (port, warning) = control_port_for(cli_port, &integrations(services::prefs_file().as_deref()));',
+          '    if !access::automation_enabled() { return None; }\n    let (port, warning) = control_port_for(cli_port, &integrations(services::prefs_file().as_deref()));')
+    # Install custom vector-derived icon assets generated by pixashop/icons.py.
+    from icons import generate
+    generate(ROOT)
+    (ROOT / 'pixashop/.prepared').write_text('PixaShop by AIWebDesignFirm\n')
+    print('Prepared PixaShop by AIWebDesignFirm. Build the existing photocraft Cargo target.')
+
+if __name__ == '__main__':
+    try:
+        prepare()
+    except (OSError, RuntimeError) as error:
+        print(f'PixaShop preparation failed: {error}', file=sys.stderr)
+        sys.exit(1)

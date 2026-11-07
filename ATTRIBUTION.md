@@ -166,3 +166,8 @@ are adapted from Skyfuller1303’s MIT OR Apache-2.0 implementation in
 `897f20072762fdf0eb688adcdb8d8cda7b38ce66`. Don Omondi’s embedded AI/PDF/EPS
 extension and current-main integration build on that source. Clipboard and unrelated
 Shape Tools changes from that branch are not included.
+
+
+## PixaShop product identity
+
+The PixaShop pixel-grid P app icon is an original code-generated asset in `pixashop/icons.py`. The PixaShop product overlay and account integration are by AIWebDesignFirm. Upstream contributor and third-party notices above remain unchanged.
