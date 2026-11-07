@@ -9,7 +9,7 @@ permissions:
   actions: read
 concurrency:
   group: pixashop-testing-release-0.20.1
-  cancel-in-progress: false
+  cancel-in-progress: true
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -17,11 +17,12 @@ jobs:
     env:
       GH_TOKEN: ${{ github.token }}
       GH_REPO: ${{ github.repository }}
+      PIXASHOP_SOURCE_SHA: 02b97b65275fdc92e38406485fe9396fb3e310ea
     steps:
       - name: Wait for this commit's desktop build run
         run: |
           for attempt in $(seq 1 30); do
-            build_run=$(gh api "repos/$GH_REPO/actions/workflows/pixashop-build.yml/runs?head_sha=$GITHUB_SHA&event=push&per_page=1" --jq '.workflow_runs[0].id // empty')
+            build_run=$(gh api "repos/$GH_REPO/actions/workflows/pixashop-build.yml/runs?head_sha=$PIXASHOP_SOURCE_SHA&event=push&per_page=1" --jq '.workflow_runs[0].id // empty')
             if [ -n "$build_run" ]; then break; fi
             sleep 3
           done
@@ -30,7 +31,7 @@ jobs:
           gh run watch "$build_run" --exit-status --interval 30
       - name: Verify source commit and download packages
         run: |
-          test "$(gh api repos/$GH_REPO/actions/runs/$PIXASHOP_BUILD_RUN --jq .head_sha)" = "$GITHUB_SHA"
+          test "$(gh api repos/$GH_REPO/actions/runs/$PIXASHOP_BUILD_RUN --jq .head_sha)" = "$PIXASHOP_SOURCE_SHA"
           gh run download "$PIXASHOP_BUILD_RUN" --dir packages
       - name: Validate all platform packages and checksums
         run: |
@@ -51,7 +52,7 @@ jobs:
               (out/name).write_bytes(package.read_bytes())
               (out/check.name).write_bytes(check.read_bytes())
           PY
-      - name: Publish a draft for final review
+      - name: Publish clearly labeled early access installers
         run: |
           cat > notes.md <<'NOTES'
           PixaShop by AIWebDesignFirm — early access testing build.
@@ -66,4 +67,4 @@ jobs:
             echo 'Release already exists; refusing to overwrite its assets.'
             exit 1
           fi
-          gh release create pixashop-v0.20.1 --target "$GITHUB_SHA" --draft --prerelease --title 'PixaShop 0.20.1 — early access testing' --notes-file notes.md release-assets/*
+          gh release create pixashop-v0.20.1 --target "$PIXASHOP_SOURCE_SHA" --prerelease --title 'PixaShop 0.20.1 — early access testing' --notes-file notes.md release-assets/*
