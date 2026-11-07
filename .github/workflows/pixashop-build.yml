@@ -15,6 +15,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     timeout-minutes: 60
     env:
+      PYTHONUTF8: '1'
       CARGO_BUILD_JOBS: '2'
       CARGO_INCREMENTAL: '0'
       PHOTOCRAFT_BUILD_SHA: ${{ github.sha }}
