@@ -18,12 +18,20 @@ jobs:
       GH_TOKEN: ${{ github.token }}
       GH_REPO: ${{ github.repository }}
     steps:
-      - name: Wait for the verified desktop build run
-        run: gh run watch 42424284065 --exit-status --interval 30
+      - name: Wait for this commit's desktop build run
+        run: |
+          for attempt in $(seq 1 30); do
+            build_run=$(gh api "repos/$GH_REPO/actions/workflows/pixashop-build.yml/runs?head_sha=$GITHUB_SHA&event=push&per_page=1" --jq '.workflow_runs[0].id // empty')
+            if [ -n "$build_run" ]; then break; fi
+            sleep 3
+          done
+          test -n "$build_run"
+          echo "PIXASHOP_BUILD_RUN=$build_run" >> "$GITHUB_ENV"
+          gh run watch "$build_run" --exit-status --interval 30
       - name: Verify source commit and download packages
         run: |
-          test "$(gh api repos/$GH_REPO/actions/runs/42424284065 --jq .head_sha)" = '47de5c73677f8853eb811b1c1b5dcbe8729240d0'
-          gh run download 42424284065 --dir packages
+          test "$(gh api repos/$GH_REPO/actions/runs/$PIXASHOP_BUILD_RUN --jq .head_sha)" = "$GITHUB_SHA"
+          gh run download "$PIXASHOP_BUILD_RUN" --dir packages
       - name: Validate all platform packages and checksums
         run: |
           python3 - <<'PY'
@@ -48,7 +56,7 @@ jobs:
           cat > notes.md <<'NOTES'
           PixaShop by AIWebDesignFirm — early access testing build.
 
-          Built from 47de5c73677f8853eb811b1c1b5dcbe8729240d0. Native compilation and activation-module tests must pass on every packaged platform before this job uploads anything. SHA-256 checksums accompany each package.
+          Built from the source commit identified by the release tag. Native compilation and activation-module tests must pass on every packaged platform before this job uploads anything. SHA-256 checksums accompany each package.
 
           These builds have not completed interactive platform QA. macOS is ad-hoc signed, without Apple notarization; Windows is unsigned. This is not a stable customer release. Account activation requires the PixaShop website integration to be deployed and enabled.
 
@@ -58,4 +66,4 @@ jobs:
             echo 'Release already exists; refusing to overwrite its assets.'
             exit 1
           fi
-          gh release create pixashop-v0.20.1 --target 47de5c73677f8853eb811b1c1b5dcbe8729240d0 --draft --prerelease --title 'PixaShop 0.20.1 — early access testing' --notes-file notes.md release-assets/*
+          gh release create pixashop-v0.20.1 --target "$GITHUB_SHA" --draft --prerelease --title 'PixaShop 0.20.1 — early access testing' --notes-file notes.md release-assets/*
