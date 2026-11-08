@@ -4,7 +4,7 @@ PixaShop is an independent branded desktop image editor based on PhotoCraft. The
 
 ## Current status
 
-Early-access installers are published at https://aiwebdesignfirm.com/pixashop. Native builds and access-module tests passed on Mac, Windows and Linux. Interactive desktop testing is incomplete. Mac builds are ad-hoc signed and not Apple notarized; Windows builds are unsigned. Preserve the newer live Vercel website source: GitHub website main remains stale.
+Early-access installers are published at https://aiwebdesignfirm.com/pixashop. Native builds and access-module tests passed on Mac, Windows and Linux. Interactive desktop testing is incomplete. The published 0.20.1 Mac app was Developer ID signed and Apple notarized. New CI builds are ad-hoc testing builds until the publisher signs and notarizes them; Windows builds are unsigned. Preserve the newer live Vercel website source: GitHub website main remains stale.
 
 ## Prepare and build
 
@@ -50,3 +50,13 @@ Companion branch: `pixashop-trial-downloads` in `lukeybird/aiwebdesignfirm`. It 
 - Sign/notarize customer installers and verify downloaded checksums.
 - Build release assets with `pixashop-<version>-...` names; validate on real Mac/Windows systems.
 - Publish a stable release, then enable downloads. No placeholder or upstream download links.
+
+## Publish the 0.20.2 Mac update
+
+After native builds and desktop QA pass, download the Mac testing DMG and run on the publisher’s Mac:
+
+```sh
+bash pixashop/sign_update_macos.sh /path/to/pixashop-0.20.2-macos-universal.dmg
+```
+
+The script uses the existing Developer ID identity and `PixaShop-Notary` Keychain profile, signs/notarizes the app and final DMG, preserves the drag-to-Applications layout, and writes the verified release under Documents. It never exports a private key or password. Publish that verified DMG as `pixashop-0.20.2-macos-universal.dmg` on a stable `v0.20.2` release only after testing activation, editing, save/reopen and the real update/restart flow. Keep website release pin unchanged until signing and QA pass. Existing 0.20.1 customers need a one-time manual install to obtain the updater. Future Mac releases use Install and restart.

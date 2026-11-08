@@ -26,7 +26,7 @@ def prepare():
     for parent in ['apps', 'crates', 'packaging']:
         for p in (ROOT / parent).rglob('*'):
             if p.is_file() and p.suffix in {'.rs', '.tsv', '.html', '.in', '.xml', '.desktop', '.wxs', '.wxl', '.ps1', '.sh', '.txt'}:
-                if any(x in p.name.lower() for x in ['license', 'attribution', 'notice']) or 'credits' in p.parts:
+                if p.suffix != '.rs' and any(x in p.name.lower() for x in ['license', 'attribution', 'notice']):
                     continue
                 try:
                     text = p.read_text(encoding='utf-8')
@@ -76,6 +76,10 @@ def prepare():
     # Keep preferences/recovery separate from an existing upstream installation.
     p = ROOT / 'apps/photocraft/src/app_dirs.rs'
     p.write_text(p.read_text(encoding='utf-8').replace('"photocraft"', '"pixashop"').replace('PHOTOCRAFT_CONFIG_DIR', 'PIXASHOP_CONFIG_DIR'), encoding='utf-8')
+    # About describes this product; upstream authorship stays in Contributors and licenses.
+    p = ROOT / 'crates/ui-egui/src/dialogs.rs'
+    text = p.read_text(encoding='utf-8').replace('PixaShop — an open-source, native image editor written in Rust.', 'PixaShop by AIWebDesignFirm — your desktop image editor.')
+    p.write_text(text, encoding='utf-8')
     # The commercial desktop does not expose an unauthenticated automation surface.
     patch('apps/photocraft/src/main.rs',
           '    let (port, warning) = control_port_for(cli_port, &integrations(services::prefs_file().as_deref()));',
