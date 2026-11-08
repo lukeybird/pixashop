@@ -21,6 +21,7 @@ def patch(path, old, new):
     p.write_text(text.replace(old, new), encoding='utf-8')
 
 def prepare():
+    patch('Cargo.toml', 'version = "0.20.1"', 'version = "0.20.2"')
     # Display strings and translated catalogs; preserve contributor credits and legal notices.
     for parent in ['apps', 'crates', 'packaging']:
         for p in (ROOT / parent).rglob('*'):
@@ -41,6 +42,7 @@ def prepare():
             target = ROOT / p.relative_to(ROOT / 'pixashop/overlay')
             target.parent.mkdir(parents=True, exist_ok=True)
             shutil.copyfile(p, target)
+    patch('crates/ui-egui/src/lib.rs', 'mod updates_ui;', 'mod updates_ui;\nmod pixashop_updater;')
     patch('apps/photocraft/src/main.rs', 'mod updates;', 'mod updates;\nmod access;')
     patch('apps/photocraft/src/main.rs', 'Ok(Box::new(app))', 'Ok(Box::new(access::AccessApp::new(app)))')
     # Upstream's restart helper has a different bundle identity. Updates are offered as our
