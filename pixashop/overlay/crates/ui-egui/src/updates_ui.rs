@@ -1,7 +1,7 @@
 //! Own-repository release notifications. No upstream installer can replace PixaShop.
+use crate::PhotocraftApp;
 use photocraft_engine::updates_cmds::Status;
 use serde_json::Value;
-use crate::PhotocraftApp;
 #[derive(Default)]
 pub(crate) struct Runtime {
     startup_checked: bool,
@@ -13,21 +13,27 @@ pub(crate) struct Runtime {
     message: String,
 }
 pub(crate) fn check(app: &mut PhotocraftApp, _ctx: &egui::Context, params: Value) -> Result<Value, String> {
-    app.ui.updates_open = true; app.updates_rt.startup_checked = true;
+    app.ui.updates_open = true;
+    app.updates_rt.startup_checked = true;
     app.run("help.checkForUpdates", params)
 }
 pub(crate) fn tick(app: &mut PhotocraftApp, ctx: &egui::Context) {
     app.session.updates.poll();
     if let Status::Available { release } = &app.session.updates.status {
         if app.updates_rt.notified_version.as_ref() != Some(&release.version) {
-            app.updates_rt.notified_version = Some(release.version.clone()); app.ui.updates_open = true;
+            app.updates_rt.notified_version = Some(release.version.clone());
+            app.ui.updates_open = true;
         }
     }
     if !app.updates_rt.startup_checked && app.session.updates.check.is_some() {
         app.updates_rt.startup_checked = true;
-        if app.session.prefs().general.automatically_check_updates { let _ = app.run("help.checkForUpdates", serde_json::json!({})); }
+        if app.session.prefs().general.automatically_check_updates {
+            let _ = app.run("help.checkForUpdates", serde_json::json!({}));
+        }
     }
-    if matches!(app.session.updates.status, Status::Checking) { ctx.request_repaint_after(std::time::Duration::from_millis(100)); }
+    if matches!(app.session.updates.status, Status::Checking) {
+        ctx.request_repaint_after(std::time::Duration::from_millis(100));
+    }
 }
 pub(crate) fn show(app: &mut PhotocraftApp, ctx: &egui::Context) {
     #[cfg(target_os = "macos")]
@@ -56,10 +62,13 @@ pub(crate) fn show(app: &mut PhotocraftApp, ctx: &egui::Context) {
             }
         }
     }
-    if !app.ui.updates_open { return; }
+    if !app.ui.updates_open {
+        return;
+    }
     let clean = !app.has_unsaved_work();
     let mut install_version: Option<String> = None;
-    let mut open = true; let mut again = false;
+    let mut open = true;
+    let mut again = false;
     egui::Window::new("PixaShop updates").open(&mut open).show(ctx, |ui| {
         ui.label("by AIWebDesignFirm");
         match &app.session.updates.status {
@@ -68,9 +77,16 @@ pub(crate) fn show(app: &mut PhotocraftApp, ctx: &egui::Context) {
                 #[cfg(target_os = "macos")]
                 {
                     let busy = app.updates_rt.pending.is_some() || app.updates_rt.ready.is_some();
-                    if busy { ui.spinner(); ui.label("Downloading and verifying your update…"); }
-                    if !clean { ui.label("Save or close your open work before installing and restarting."); }
-                    if app.updates_rt.ready.is_some() { ui.label("Update verified. Waiting for you to save your work."); }
+                    if busy {
+                        ui.spinner();
+                        ui.label("Downloading and verifying your update…");
+                    }
+                    if !clean {
+                        ui.label("Save or close your open work before installing and restarting.");
+                    }
+                    if app.updates_rt.ready.is_some() {
+                        ui.label("Update verified. Waiting for you to save your work.");
+                    }
                     if ui.add_enabled(clean && !busy, egui::Button::new("Install and restart")).clicked() {
                         install_version = Some(release.version.clone());
                     }
@@ -83,13 +99,26 @@ pub(crate) fn show(app: &mut PhotocraftApp, ctx: &egui::Context) {
                     ctx.open_url(egui::OpenUrl::new_tab("https://aiwebdesignfirm.com/pixashop"));
                 }
             }
-            Status::Checking => { ui.spinner(); ui.label("Checking for updates…"); }
-            Status::UpToDate => { ui.label("You have the latest published PixaShop version."); }
-            Status::Failed { message } => { ui.label(message); }
-            Status::Idle => { ui.label("Check for a new PixaShop release."); }
+            Status::Checking => {
+                ui.spinner();
+                ui.label("Checking for updates…");
+            }
+            Status::UpToDate => {
+                ui.label("You have the latest published PixaShop version.");
+            }
+            Status::Failed { message } => {
+                ui.label(message);
+            }
+            Status::Idle => {
+                ui.label("Check for a new PixaShop release.");
+            }
         }
-        if !app.updates_rt.message.is_empty() { ui.label(&app.updates_rt.message); }
-        if ui.button("Check again").clicked() { again = true; }
+        if !app.updates_rt.message.is_empty() {
+            ui.label(&app.updates_rt.message);
+        }
+        if ui.button("Check again").clicked() {
+            again = true;
+        }
     });
     #[cfg(target_os = "macos")]
     if let Some(version) = install_version {
@@ -105,5 +134,7 @@ pub(crate) fn show(app: &mut PhotocraftApp, ctx: &egui::Context) {
     #[cfg(not(target_os = "macos"))]
     let _ = (clean, &mut install_version);
     app.ui.updates_open = open;
-    if again { let _ = check(app, ctx, serde_json::json!({})); }
+    if again {
+        let _ = check(app, ctx, serde_json::json!({}));
+    }
 }
