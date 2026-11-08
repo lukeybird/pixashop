@@ -92,11 +92,11 @@ jobs:
 
           Open documents and preferences should be backed up before testing. Updates prompt for a new installer; automatic installation is disabled.
           NOTES
-          if gh release view pixashop-v0.20.1 >/dev/null 2>&1; then
+          if gh release view v0.20.1 >/dev/null 2>&1; then
             echo 'Release already exists; refusing to overwrite its assets.'
             exit 1
           fi
-          gh release create pixashop-v0.20.1 --target "$PIXASHOP_SOURCE_SHA" --prerelease --title 'PixaShop 0.20.1 — early access testing' --notes-file notes.md release-assets/*
+          gh release create v0.20.1 --target "$PIXASHOP_SOURCE_SHA" --prerelease --title 'PixaShop 0.20.1 — early access testing' --notes-file notes.md release-assets/*
       - name: Wait for the remaining platform builds
         run: gh run watch "$PIXASHOP_BUILD_RUN" --exit-status --interval 30
       - name: Download the remaining verified installers
@@ -117,4 +117,4 @@ jobs:
               shutil.copy2(package,Path('release-assets')/name)
               shutil.copy2(check,Path('release-assets')/check.name)
           PYVERIFY
-          gh release upload pixashop-v0.20.1 release-assets/*windows* release-assets/*linux*
+          gh release upload v0.20.1 release-assets/*windows* release-assets/*linux*
