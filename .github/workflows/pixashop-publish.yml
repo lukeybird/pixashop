@@ -45,6 +45,7 @@ jobs:
           for attempt in $(seq 1 30); do
             build_run=$(gh api "repos/$GH_REPO/actions/workflows/pixashop-build.yml/runs?head_sha=$PIXASHOP_SOURCE_SHA&event=push&per_page=1" --jq '.workflow_runs[0].id // empty')
             if [ -n "$build_run" ]; then break; fi
+            echo "Waiting for the desktop build run ($attempt/30)"
             sleep 3
           done
           test -n "$build_run"
@@ -52,7 +53,7 @@ jobs:
           gh run watch "$build_run" --exit-status --interval 30
       - name: Verify source commit and download packages
         run: |
-          test "$(gh api repos/$GH_REPO/actions/runs/$PIXASHOP_BUILD_RUN --jq .head_sha)" = "$PIXASHOP_SOURCE_SHA"
+          test "$(gh api "repos/$GH_REPO/actions/runs/$PIXASHOP_BUILD_RUN" --jq .head_sha)" = "$PIXASHOP_SOURCE_SHA"
           gh run download "$PIXASHOP_BUILD_RUN" --dir packages
       - name: Validate all platform packages and checksums
         run: |
