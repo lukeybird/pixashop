@@ -1,0 +1,86 @@
+name: Package notarized PixaShop for Mac
+on:
+  push:
+    branches: [pixashop-product]
+    paths: [.github/workflows/pixashop-notarized.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  package:
+    runs-on: macos-15
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install installer layout tool
+        run: python -m pip install dmgbuild==1.6.7
+      - name: Download owner-approved signed application
+        run: |
+          mkdir -p work dist
+          curl --fail --location --retry 2 https://github.com/lukeybird/pixashop/releases/download/v0.20.1/PixaShop-notarize.zip -o work/signed.zip
+          echo 'efb406f74f0e93dee3c11cfa0946bbde64bf9df7d75f86dd3e1e91c7e7933e74  work/signed.zip' | shasum -a 256 -c -
+          ditto -x -k work/signed.zip work/source
+      - name: Verify identity, hardened runtime and exact binary
+        shell: bash
+        run: |
+          set -euo pipefail
+          app=work/source/PixaShop.app
+          codesign --verify --deep --strict --verbose=2 -R='anchor apple generic and certificate leaf[subject.OU] = "945M5X4DY3" and identifier "com.aiwebdesignfirm.pixashop"' "$app"
+          codesign --display --verbose=4 "$app" 2> work/signature.txt
+          cat work/signature.txt
+          grep -q 'Authority=Developer ID Application: Luke Barger' work/signature.txt
+          grep -q 'runtime' work/signature.txt
+          echo '129e909309845121d8ec9da13b42fc3c4c3d08beb0189701d243e3ce1556ae90  work/source/PixaShop.app/Contents/MacOS/pixashop' | shasum -a 256 -c -
+          lipo -archs "$app/Contents/MacOS/pixashop"
+      - name: Attach and validate Apple notarization approval
+        shell: bash
+        run: |
+          set -euo pipefail
+          app=work/source/PixaShop.app
+          xcrun stapler staple "$app"
+          xcrun stapler validate "$app"
+          spctl --assess --type execute --verbose=2 "$app" 2>&1 | tee work/gatekeeper.txt
+          grep -q 'source=Notarized Developer ID' work/gatekeeper.txt
+      - name: Package the approved app with Applications shortcut
+        run: python pixashop/macos_dmg.py work/source/PixaShop.app dist/pixashop-0.20.1-macos-universal.dmg
+      - name: Verify the actual packaged app and installer layout
+        shell: bash
+        run: |
+          set -euo pipefail
+          dmg=dist/pixashop-0.20.1-macos-universal.dmg
+          hdiutil verify "$dmg"
+          mkdir -p work/mount
+          hdiutil attach "$dmg" -readonly -nobrowse -mountpoint "$PWD/work/mount"
+          trap 'hdiutil detach "$PWD/work/mount"' EXIT
+          test "$(readlink work/mount/Applications)" = '/Applications'
+          app=work/mount/PixaShop.app
+          codesign --verify --deep --strict --verbose=2 "$app"
+          xcrun stapler validate "$app"
+          spctl --assess --type execute --verbose=2 "$app" 2>&1 | tee work/packaged-gatekeeper.txt
+          grep -q 'source=Notarized Developer ID' work/packaged-gatekeeper.txt
+          diff -rq work/source/PixaShop.app "$app"
+          python - <<'PY'
+          from ds_store import DSStore
+          from pathlib import Path
+          import hashlib,json
+          root=Path('work/mount')
+          assert any(p.is_file() and p.stat().st_size for p in root.glob('.background*'))
+          with DSStore.open(str(root/'.DS_Store'),'r') as s:
+              assert s['PixaShop.app']['Iloc']==(140,120)
+              assert s['Applications']['Iloc']==(500,120)
+          dmg=Path('dist/pixashop-0.20.1-macos-universal.dmg')
+          digest=hashlib.sha256(dmg.read_bytes()).hexdigest()
+          dmg.with_name(dmg.name+'.sha256').write_text(digest+'  '+dmg.name+'\n')
+          report={'app':'PixaShop','version':'0.20.1','teamId':'945M5X4DY3','signedApp':True,'hardenedRuntime':True,'stapledApp':True,'packagedAppGatekeeper':'Notarized Developer ID','dragToApplications':True,'sha256':digest,'note':'App is Developer ID signed and notarized; DMG is a new container, not separately signed or notarized. Native interactive QA remains separate.'}
+          Path('dist/mac-verification.json').write_text(json.dumps(report,indent=2)+'\n')
+          print(json.dumps(report,indent=2))
+          PY
+      - uses: actions/upload-artifact@v4
+        with:
+          name: PixaShop-notarized-Mac-installer
+          path: dist/*
+          if-no-files-found: error
+          retention-days: 30
