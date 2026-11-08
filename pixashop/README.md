@@ -4,7 +4,7 @@ PixaShop is an independent branded desktop image editor based on PhotoCraft. The
 
 ## Current status
 
-Implementation in progress. No tested installer has been published. Website activation/download routes must be deployed against the latest live aiwebdesignfirm.com source, not GitHub's stale main. Native compile and release checks are being verified; do not interpret the overlay as a customer release until installers and end-to-end activation pass.
+Early-access installers are published at https://aiwebdesignfirm.com/pixashop. Native builds and access-module tests passed on Mac, Windows and Linux. Interactive desktop testing is incomplete. Mac builds are ad-hoc signed and not Apple notarized; Windows builds are unsigned. Preserve the newer live Vercel website source: GitHub website main remains stale.
 
 ## Prepare and build
 
@@ -19,7 +19,7 @@ cargo build --release -p photocraft
 python pixashop/package.py
 ```
 
-On macOS, add Rust targets `aarch64-apple-darwin` and `x86_64-apple-darwin`, then build both with `MACOSX_DEPLOYMENT_TARGET=11.0` before packaging. The initial package script creates unsigned/testing builds (macOS is ad-hoc signed), not notarized customer releases. Configure AIWebDesignFirm's own Apple Developer ID/notarization and Windows signing credentials for production. Never use upstream's certificates. HEIF support remains optional and is not enabled by these commands.
+On macOS, install `dmgbuild==1.6.7` with pip for the drag-to-Applications disk image layout. Add Rust targets `aarch64-apple-darwin` and `x86_64-apple-darwin`, then build both with `MACOSX_DEPLOYMENT_TARGET=11.0` before packaging. The package script creates unsigned/testing builds (macOS is ad-hoc signed), not notarized customer releases. Configure AIWebDesignFirm's own Apple Developer ID/notarization and Windows signing credentials for production. Never use upstream's certificates. HEIF support remains optional and is not enabled by these commands.
 
 ## Trial and account access
 
@@ -29,11 +29,11 @@ This is an application access gate, not tamper-proof DRM. The underlying engine/
 
 ## Updates
 
-Startup and Help → Check for Updates query only `lukeybird/pixashop` releases. They never install upstream PhotoCraft binaries. The initial update flow offers the new publisher-hosted download page and asks the customer to save their work and install the new version. Automatic in-place installation is disabled until a PixaShop-specific signed updater is implemented. Versioning uses the workspace version. Increment it before each independent release, build all supported platforms, verify activation and publish only after testing. GitHub's latest stable release drives the download route; drafts/prereleases are intentionally not offered to customers.
+Startup and Help → Check for Updates query only `lukeybird/pixashop` releases. They never install upstream PhotoCraft binaries. The initial update flow offers the new publisher-hosted download page and asks the customer to save their work and install the new version. Automatic in-place installation is disabled until a PixaShop-specific signed updater is implemented. Versioning uses the workspace version. Increment it before each independent release, build all supported platforms, verify activation and publish only after testing. The website currently pins the explicitly labeled early-access `v0.20.1` prerelease using `PIXASHOP_RELEASE_TAG`. Without a pin it follows the latest stable release. Draft releases are never offered.
 
 ## Branding and notices
 
-The icon is an original pixel-grid P from `pixashop/icons.py`; build-time generated icons replace the upstream app icons. Required upstream notices and third-party licenses remain in the package's `Licenses` folder. Upstream contributor credits are preserved. The overlay must not promote the modified app as an ArtCraft product.
+The icon is an original pixel-grid P from `pixashop/icons.py`; build-time generated icons replace the upstream app icons. Required upstream notices and third-party licenses remain in the package's `Licenses` folder (inside `PixaShop.app/Contents/Resources` on Mac). Upstream contributor credits are preserved. The overlay must not promote the modified app as an ArtCraft product.
 
 ## Website integration
 
