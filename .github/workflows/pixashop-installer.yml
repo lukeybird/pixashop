@@ -47,7 +47,8 @@ jobs:
           from ds_store import DSStore
           from pathlib import Path
           p=Path('work/mount')
-          assert (p/'.background').is_dir()
+          backgrounds=[f for f in p.iterdir() if f.name.startswith('.background') and f.is_file()]
+          assert backgrounds and all(f.stat().st_size > 0 for f in backgrounds), 'Missing installer arrow background'
           with DSStore.open(str(p/'.DS_Store'),'r') as store:
               assert store['PixaShop.app']['Iloc']==(140,120)
               assert store['Applications']['Iloc']==(500,120)
@@ -62,3 +63,4 @@ jobs:
           path: dist/*
           if-no-files-found: error
           retention-days: 30
+
