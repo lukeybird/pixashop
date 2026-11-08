@@ -1,4 +1,4 @@
-name: PixaShop Mac drag-to-install
+name: PixaShop Mac installer checks
 on:
   push:
     branches: [pixashop-installer]
