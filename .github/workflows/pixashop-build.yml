@@ -26,6 +26,9 @@ jobs:
           python-version: '3.12'
       - name: Install packaging dependency
         run: python -m pip install Pillow
+      - name: Install Mac installer layout dependency
+        if: runner.os == 'macOS'
+        run: python -m pip install dmgbuild==1.6.7
       - name: Install Rust
         shell: bash
         run: rustup toolchain install 1.95.0 --profile minimal && rustup default 1.95.0

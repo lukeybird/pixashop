@@ -37,7 +37,8 @@ def package():
             plistlib.dump({'CFBundleName':'PixaShop','CFBundleDisplayName':'PixaShop','CFBundleIdentifier':'com.aiwebdesignfirm.pixashop','CFBundleExecutable':'pixashop','CFBundlePackageType':'APPL','CFBundleShortVersionString':version,'CFBundleVersion':version,'CFBundleIconFile':'PixaShop','LSMinimumSystemVersion':'11.0','NSHighResolutionCapable':True},f)
         subprocess.run(['codesign','--force','--deep','--sign','-',str(app)],check=True)
         asset=out/f'pixashop-{version}-macos-universal.dmg'
-        subprocess.run(['hdiutil','create','-volname','PixaShop','-srcfolder',str(stage),'-ov','-format','UDZO',str(asset)],check=True)
+        from macos_dmg import build_installer
+        build_installer(app, asset)
     else:
         shutil.copyfile(target/'release/photocraft',stage/'pixashop');(stage/'pixashop').chmod(0o755)
         asset=out/f'pixashop-{version}-linux-x86_64.tar.gz'
