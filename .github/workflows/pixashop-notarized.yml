@@ -27,6 +27,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          retry_apple() { local attempt; for attempt in 1 2 3 4; do if "$@"; then return 0; fi; echo "Retrying Apple validation after unsuccessful attempt $attempt/4"; sleep 5; done; return 1; }
           app=work/source/PixaShop.app
           codesign --verify --deep --strict --verbose=2 -R='anchor apple generic and certificate leaf[subject.OU] = "945M5X4DY3" and identifier "com.aiwebdesignfirm.pixashop"' "$app"
           codesign --display --verbose=4 "$app" 2> work/signature.txt
@@ -39,10 +40,11 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          retry_apple() { local attempt; for attempt in 1 2 3 4; do if "$@"; then return 0; fi; echo "Retrying Apple validation after unsuccessful attempt $attempt/4"; sleep 5; done; return 1; }
           app=work/source/PixaShop.app
-          xcrun stapler staple "$app"
-          xcrun stapler validate "$app"
-          spctl --assess --type execute --verbose=2 "$app" 2>&1 | tee work/gatekeeper.txt
+          retry_apple xcrun stapler staple "$app"
+          retry_apple xcrun stapler validate "$app"
+          retry_apple spctl --assess --type execute --verbose=2 "$app" 2>&1 | tee work/gatekeeper.txt
           grep -q 'source=Notarized Developer ID' work/gatekeeper.txt
       - name: Package the approved app with Applications shortcut
         run: python pixashop/macos_dmg.py work/source/PixaShop.app dist/pixashop-0.20.1-macos-universal.dmg
@@ -50,6 +52,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
+          retry_apple() { local attempt; for attempt in 1 2 3 4; do if "$@"; then return 0; fi; echo "Retrying Apple validation after unsuccessful attempt $attempt/4"; sleep 5; done; return 1; }
           dmg=dist/pixashop-0.20.1-macos-universal.dmg
           hdiutil verify "$dmg"
           mkdir -p work/mount
@@ -58,8 +61,8 @@ jobs:
           test "$(readlink work/mount/Applications)" = '/Applications'
           app=work/mount/PixaShop.app
           codesign --verify --deep --strict --verbose=2 "$app"
-          xcrun stapler validate "$app"
-          spctl --assess --type execute --verbose=2 "$app" 2>&1 | tee work/packaged-gatekeeper.txt
+          retry_apple xcrun stapler validate "$app"
+          retry_apple spctl --assess --type execute --verbose=2 "$app" 2>&1 | tee work/packaged-gatekeeper.txt
           grep -q 'source=Notarized Developer ID' work/packaged-gatekeeper.txt
           diff -rq work/source/PixaShop.app "$app"
           python - <<'PY'
