@@ -16,7 +16,7 @@ struct Chapter {
     note: String,
 }
 fn key() -> egui::Id {
-    egui::Id::new("pixashop-user-manual")
+    egui::Id::unique("pixashop-user-manual")
 }
 pub(crate) fn open(ctx: &egui::Context) {
     ctx.data_mut(|d| d.insert_temp(key(), true));

@@ -18,7 +18,7 @@ struct Tour {
     anchors: Vec<(Tool, Rect)>,
 }
 fn key() -> Id {
-    Id::new("pixashop-tool-tour")
+    Id::unique("pixashop-tool-tour")
 }
 fn steps() -> &'static Result<Vec<Step>, String> {
     static STEPS: OnceLock<Result<Vec<Step>, String>> = OnceLock::new();
@@ -107,7 +107,7 @@ pub(crate) fn show(app: &mut PhotocraftApp, ctx: &Context) {
     let mut go_next = false;
     let mut open_manual = false;
     egui::Window::new("PixaShop quick tool tour").id(key().with("bubble")).title_bar(false).collapsible(false).resizable(false).movable(false)
-        .fixed_pos(pos).default_width(width).frame(egui::Frame::popup(&ctx.style()).inner_margin(16).corner_radius(12))
+        .fixed_pos(pos).default_width(width).frame(egui::Frame::popup(&ctx.global_style()).inner_margin(16).corner_radius(12))
         .show(ctx, |ui| {
             ui.horizontal(|ui| {
                 ui.strong("PixaShop · Quick tool tour");
@@ -191,8 +191,9 @@ mod tests {
         assert!(ctx.data(|d| d.get_temp::<Tour>(key())).unwrap().open);
         assert_eq!(app.ui.tool, before);
         assert!(app.session.active().is_none());
-        let output = ctx.run(egui::RawInput::default(), |ctx| show(&mut app, ctx));
+        let mut output = ctx.run_ui(egui::RawInput::default(), |ui| show(&mut app, ui.ctx()));
         assert!(!output.shapes.is_empty(), "the tour must render without a document");
+        output.textures_delta.clear();
         assert_eq!(app.ui.tool, before);
         assert_eq!(bounded_index(usize::MAX, steps().as_ref().unwrap().len()), steps().as_ref().unwrap().len() - 1);
         assert_eq!(bounded_index(1, 0), 0);
