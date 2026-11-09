@@ -1,0 +1,241 @@
+PIXASHOP / AIWEBDESIGNFIRM — CURSOR PROJECT STATUS
+Last checked: 2026-11-09, 9:40 AM America/New_York
+This is a status snapshot, not an automatic monitoring feed. Refresh remote state before acting.
+
+READ THIS FIRST
+Read this file and applicable AGENTS.md instructions before making changes.
+The user wants practical implementation with minimal manual copying/pasting.
+Keep billing, payment configuration, pricing, trials, and subscription behavior unchanged unless explicitly requested.
+Keep the visual design focused, simple, and consistent: dark navy, cyan pixel-P branding, PixaShop by AIWebDesignFirm.
+Never commit or print private keys, passwords, API keys, Keychain exports, or signing credentials.
+
+1. CURRENT LIVE STATE
+
+Website:
+https://aiwebdesignfirm.com
+Product/download page:
+https://aiwebdesignfirm.com/pixashop
+User manual:
+https://aiwebdesignfirm.com/pixashop/manual
+
+Current production Vercel deployment:
+dpl_5nqfpYzq89oQj3ft1nzP63pWPBQ5
+Deployment URL:
+https://aiwebdesignfirm-4nsflq5b9-luke-bargers-projects.vercel.app
+Team: luke-bargers-projects
+Team ID: team_RKRmhKKjwynrJTxLeUcMKQrU
+Project: aiwebdesignfirm
+Project ID: prj_IIyLcSM10oVhs9No39KoqLsXz5jr
+
+Published desktop release:
+v0.20.2
+https://github.com/lukeybird/pixashop/releases/tag/v0.20.2
+
+The 0.20.2 Mac app and DMG were signed and notarized on the publisher's Mac.
+Uploaded Mac DMG SHA-256:
+31af38a789fcad914a8022199461d89a3656daba07ed7dea12cb4090790aa62d
+Mac asset filename: pixashop-0.20.2-macos-universal.dmg
+Mac asset size: 88,263,712 bytes.
+The uploaded bytes matched the supplied checksum and GitHub release digest.
+The website displayed v0.20.2 and its authenticated Mac download button triggered a download.
+This does not establish that every editing feature or an actual in-place upgrade has been tested.
+
+2. CRITICAL WEBSITE SOURCE WARNING
+
+Website repository: lukeybird/aiwebdesignfirm
+GitHub main is stale, at commit:
+4aa058de205a132f75a0f2fd8ce27bf1c58e01e2
+
+The live deployment includes newer builder, account, billing, and product files that are NOT all on GitHub main.
+DO NOT deploy a fresh website clone or deploy that stale main commit.
+DO NOT overwrite the production site with the native app repository.
+Recover/preserve the current production source before editing the website.
+Previous successful deployments retained Vercel source file SHA references and changed only intended files.
+The public website deployment URL is not a replacement for a recovered source checkout.
+Do not push recovered private live website source into a public repository.
+
+A previous redeploy was automatically rejected because a source snapshot included .vercel-redeploy-auth.txt.
+That non-runtime marker was excluded; the safer deployment succeeded. It is not needed for current source deployments.
+Do not reintroduce it or use it as an authentication credential.
+
+Non-secret Vercel release configuration:
+PIXASHOP_ENABLED=true
+PIXASHOP_RELEASE_TAG=v0.20.2
+Production and Preview currently use that release tag.
+Keep the pin at the signed release until its replacement is verified and published.
+Do not retrieve unrelated secrets to perform documentation or appearance changes.
+
+3. NATIVE REPOSITORY / PENDING UPDATE
+
+Repository: lukeybird/pixashop
+Working branch: pixashop-product
+Latest application-code commit:
+ac929312525166a84a113cb7f38efa6f8a7068ab
+
+Pending version: 0.20.3, NOT published and NOT signed yet.
+This status file is documentation only and may make the branch head newer than that application commit.
+
+PixaShop is a branded native Rust/egui/eframe desktop editor based on PhotoCraft.
+Internal crate names remain photocraft-* for compatibility.
+Do not replace it with Electron, Tauri, or a webview shell.
+
+The repository uses a preparation overlay, not a fully rewritten upstream source tree.
+Apply changes to pixashop/overlay, pixashop/prepare.py, and product-owned assets/content.
+Use a clean checkout for preparation; do not blindly repeat preparation against an already transformed checkout.
+The preparation step sets the pending workspace version to 0.20.3.
+
+Important files:
+pixashop/prepare.py
+pixashop/package.py
+pixashop/macos_dmg.py
+pixashop/icons.py
+pixashop/sign_update_macos.sh
+pixashop/overlay/apps/photocraft/src/access.rs
+pixashop/overlay/apps/photocraft/src/updates.rs
+pixashop/overlay/crates/ui-egui/src/updates_ui.rs
+pixashop/overlay/crates/ui-egui/src/pixashop_updater.rs
+pixashop/overlay/crates/ui-egui/src/pixashop_restart.sh
+pixashop/overlay/crates/ui-egui/src/pixashop_manual.rs
+pixashop/overlay/crates/ui-egui/src/pixashop_tour.rs
+pixashop/manual/guide.json
+pixashop/manual/PixaShop-User-Manual.md
+pixashop/manual/tools.json
+pixashop/tests/
+
+4. WHAT IS ALREADY IMPLEMENTED
+
+Published 0.20.2:
+- PixaShop identity and pixel-P icon.
+- Product UI promotional Discord and repository links removed.
+- No PixaShop Discord exists. Do not add upstream Discord links.
+- Contributor credits and license notices preserved.
+- Developer ID signed / Apple-notarized Mac app and installer.
+- PixaShop-owned GitHub release checking, not upstream PhotoCraft release checking.
+- Mac Install and restart updater for future newer releases.
+- Updater verifies the release checksum, publisher identity, bundle identity, version, and Gatekeeper assessment.
+- Unsaved work blocks install/restart; the helper waits for normal app exit and attempts rollback on failed replacement or launch.
+- Existing 0.20.1 customers need one manual installation of 0.20.2 to obtain the updater.
+- Windows and Linux still use website downloads. Windows builds are unsigned.
+- Device activation and trial/subscription checks remain in place.
+
+Live website manual:
+- 12 practical chapters, chapter navigation, downloadable Markdown, print-friendly styling.
+- Covers installation, activation, first edit, workspace, layers, masks, text, adjustments, brushes, saving, exporting, account/update help, and troubleshooting.
+- PixaShop page footer now links to User manual instead of the GitHub repository.
+- Current installed app can reach it via Help > PixaShop Website > User manual.
+- Public manual download:
+https://aiwebdesignfirm.com/pixashop/PixaShop-User-Manual.md
+
+Pending 0.20.3 app:
+- Help > PixaShop User Manual opens a bundled, searchable manual window.
+- Guide data is embedded in the binary; the guide itself does not need a network fetch.
+- Account entitlement checks still require internet.
+- Help > Quick Tool Tour opens coaching bubbles for all 68 registered tools.
+- Tour uses actual toolbar order and highlights the tool's group, scrolling the toolbox when needed.
+- Includes a description, short usage instruction, current shortcut if assigned, Back, Next/Done, Skip, tool picker, and Manual button.
+- Grouped/flyout tools are explained individually.
+- Tour navigation does not invoke tool selection or image-editing commands and does not create a document.
+- The selected tool and image are preserved. The tour can be opened without a document, with fallback guidance when the toolbox is not visible.
+- The manual and tour link to each other inside the app.
+- These changes are NOT in the already signed 0.20.2 download.
+
+5. LATEST BUILD STATUS — CHECK AGAIN BEFORE GIVING USER COMMANDS
+
+Latest desktop build for application commit ac929312...:
+https://github.com/lukeybird/pixashop/actions/runs/42631705425
+
+At the status check above:
+- Mac: CANCELLED. This is no longer merely queued.
+- Windows: in progress.
+- Linux: succeeded.
+- No new Mac installer was available at the last artifact check.
+
+Investigate why the Mac job was cancelled, then rerun that exact current Mac job or the current workflow as appropriate.
+Do not rerun an older manual-only build or a commit containing the earlier tour API errors.
+Do not tell the user to sign 0.20.3 until its actual Mac artifact exists.
+Do not infer completion from a successful Linux job or a generic workflow heading.
+
+Checks already completed:
+- Eight Python regression/branding/tool-coverage checks passed.
+- Three isolated Rust UI harness tests passed using the pinned egui fork:
+  * bundled manual opens without a document;
+  * all registered tools have one tour entry;
+  * tour renders without a document and preserves selected-tool/document state in the isolated harness.
+- This was an isolated UI harness, not the complete editor or a real Mac upgrade.
+- A full local cargo check stopped on dependency linker errors (undefined symbols in third-party proc-macro libraries), before validating the full editor build.
+- Full app compilation, interactive editing QA, actual toolbox bubble placement, and a real install/restart update test remain necessary.
+
+Pinned egui API details that were fixed:
+- Context uses global_style(), not style().
+- Headless frames use run_ui(), not run().
+- Use Id::unique for global widget IDs; LayerId still uses LayerId::new.
+- Tests must clear unapplied textures_delta before dropping headless outputs.
+
+6. APPLE SIGNING — LOCAL MAC ONLY
+
+The publisher has already installed a valid Developer ID Application identity and matching private key in login Keychain.
+Apple Team ID: 945M5X4DY3
+Bundle ID: com.aiwebdesignfirm.pixashop
+Existing notarization Keychain profile: PixaShop-Notary
+
+No private key or notarization password was exported to this chat or committed.
+A cloud browser or remote Linux build runner cannot use the Mac's local Keychain.
+A local agent on the publisher's Mac can run the script; the user may still need to approve the Keychain password dialog.
+
+Script:
+pixashop/sign_update_macos.sh
+
+A copy previously downloaded by the user is:
+$HOME/Downloads/sign_update_macos.sh
+
+It accepts ONE existing DMG path and derives the version from the app's Info.plist.
+Its usage example still mentions 0.20.2, but the script is not limited to 0.20.2.
+A Usage message on the attempted 0.20.3 command occurred because the installer path did not exist.
+The old signed 0.20.2 file is not evidence that a 0.20.3 build is ready.
+
+ONLY AFTER the latest Mac artifact exists:
+1. Download PixaShop-macOS-testing from the current successful Actions build.
+2. Extract the ZIP and locate the actual pixashop-0.20.3-macos-universal.dmg.
+3. Use its real full path. Downloads may contain suffixes such as "(1)" or another extracted-folder name.
+4. Run the signing script with that existing path.
+5. Let it sign the app, notarize/staple it, preserve the DMG installation layout, sign/notarize/staple the DMG, and verify the final app.
+6. Success creates:
+   $HOME/Documents/PixaShop-Release-0.20.3/pixashop-0.20.3-macos-universal.dmg
+   and its .sha256 file.
+7. Verify the final output before uploading/publishing.
+
+Do not rename a 0.20.2 installer to 0.20.3.
+Do not reuse an old notarization result after modifying or rebuilding an app.
+Do not publish CI's ad-hoc Mac testing artifact as the trusted signed installer.
+Do not overwrite v0.20.2 assets with rebuilt 0.20.3 files.
+
+7. RELEASE / UPDATE PROCESS
+
+The GitHub desktop workflow is .github/workflows/pixashop-build.yml.
+It prepares the overlay, checks native compilation, runs access tests, builds native binaries, and packages artifacts.
+The universal Mac build includes Apple Silicon and Intel binaries.
+Testing artifacts are not production-signed releases.
+
+When the new Mac package passes signing and QA:
+- Publish the versioned assets and normalized checksum filenames to a matching PixaShop release.
+- The Mac updater checks the repository's latest published non-prerelease release.
+- Keep release tags, app Info.plist version, asset filename, and workspace version aligned.
+- Verify the uploaded Mac digest matches the signed local DMG.
+- Update PIXASHOP_RELEASE_TAG only after assets are ready.
+- Redeploy using CURRENT LIVE WEBSITE SOURCE, preserving its builder/account/billing files.
+- Verify production aliases, version shown on /pixashop, and the actual download flow.
+- Run a real 0.20.2 -> 0.20.3 Install and restart test with saved/closed documents.
+- Check activation and at least open/edit/save/reopen/export basics on the resulting app.
+- Do not report the entire product as fully tested based solely on build success.
+
+8. OTHER OPEN WORK / LIMITATIONS
+
+- The request to separate /account from TDG/Territory Game was discussed but has NOT been completed in this work. Inspect the live routes before claiming it is fixed.
+- Existing site billing behavior must be preserved during design/docs changes.
+- Hiding repository links does not make the repository private.
+- lukeybird/pixashop remains public. Current downloads and update metadata depend on public GitHub releases. Making it private without migrating delivery would break those flows.
+- Keep underlying authorship, contributor credits, and license notices truthful.
+- The long-term goal is reliable, low-friction desktop updates and a cohesive PixaShop/AIWebDesignFirm experience.
+
+RECOMMENDED NEXT ACTION FOR CURSOR
+Read applicable AGENTS.md, inspect the latest branch and Actions status, resolve the cancelled current Mac build, and obtain its actual 0.20.3 installer. Only then run local signing and finish verified publication. Report concrete results and blockers; do not ask the user to repeatedly sign a missing or outdated file.
