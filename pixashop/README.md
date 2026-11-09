@@ -60,3 +60,11 @@ bash pixashop/sign_update_macos.sh /path/to/pixashop-0.20.2-macos-universal.dmg
 ```
 
 The script uses the existing Developer ID identity and `PixaShop-Notary` Keychain profile, signs/notarizes the app and final DMG, preserves the drag-to-Applications layout, and writes the verified release under Documents. It never exports a private key or password. Publish that verified DMG as `pixashop-0.20.2-macos-universal.dmg` on a stable `v0.20.2` release only after testing activation, editing, save/reopen and the real update/restart flow. Keep website release pin unchanged until signing and QA pass. Existing 0.20.1 customers need a one-time manual install to obtain the updater. Future Mac releases use Install and restart.
+
+## PixaShop user manual
+
+The current online manual is https://aiwebdesignfirm.com/pixashop/manual, also linked from the PixaShop download page. Installed 0.20.2 users can reach it through Help → PixaShop Website → User manual without reinstalling.
+
+The next desktop version, 0.20.3, adds Help → PixaShop User Manual. Its searchable chapter window embeds `pixashop/manual/guide.json` in the binary and does not fetch the guide over the network. The window also links to the online manual. Account access checks still require internet access. The Markdown edition is `pixashop/manual/PixaShop-User-Manual.md`.
+
+The 0.20.3 source must pass native checks, then its Mac app and DMG must be signed and notarized before publishing a new update. Do not replace the signed 0.20.2 release assets with a rebuilt binary using the same version number.

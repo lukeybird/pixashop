@@ -21,7 +21,7 @@ def patch(path, old, new):
     p.write_text(text.replace(old, new), encoding='utf-8')
 
 def prepare():
-    patch('Cargo.toml', 'version = "0.20.1"', 'version = "0.20.2"')
+    patch('Cargo.toml', 'version = "0.20.1"', 'version = "0.20.3"')
     # Display strings and translated catalogs; preserve contributor credits and legal notices.
     for parent in ['apps', 'crates', 'packaging']:
         for p in (ROOT / parent).rglob('*'):
@@ -79,6 +79,24 @@ def prepare():
     # About describes this product; upstream authorship stays in Contributors and licenses.
     p = ROOT / 'crates/ui-egui/src/dialogs.rs'
     text = p.read_text(encoding='utf-8').replace('PixaShop — an open-source, native image editor written in Rust.', 'PixaShop by AIWebDesignFirm — your desktop image editor.')
+    p.write_text(text, encoding='utf-8')
+    # Bundle the guide and expose it without a network dependency or an open document.
+    patch('crates/ui-egui/src/lib.rs', 'mod pixashop_updater;', 'mod pixashop_updater;\nmod pixashop_manual;')
+    patch('crates/engine/src/shell_commands.rs',
+          '    ("help.website", "PixaShop Website", &["Help"], None),',
+          '    ("help.manual", "PixaShop User Manual…", &["Help"], None),\n    ("help.website", "PixaShop Website", &["Help"], None),')
+    patch('crates/ui-egui/src/menus/state.rs',
+          '        i if crate::links::url_for(i).is_some() => true,',
+          '        "help.manual" => true,\n        i if crate::links::url_for(i).is_some() => true,')
+    patch('crates/ui-egui/src/menus/invoke.rs',
+          '    if let Some(url) = crate::links::url_for(id) {',
+          '    if id == "help.manual" { crate::pixashop_manual::open(ctx); return Some(Ok(json!({"manual": true}))); }\n    if let Some(url) = crate::links::url_for(id) {')
+    patch('crates/ui-egui/src/app/frame.rs',
+          '        updates_ui::show(self, &ctx);',
+          '        updates_ui::show(self, &ctx);\n        crate::pixashop_manual::show(self, &ctx);')
+    p = ROOT / 'crates/ui-egui/src/links.rs'
+    text = p.read_text(encoding='utf-8').replace('pub const TUTORIALS: &str = "https://aiwebdesignfirm.com/pixashop";', 'pub const TUTORIALS: &str = "https://aiwebdesignfirm.com/pixashop/manual";')
+    text = text.replace('                "help.website",', '                "help.manual",\n                "help.website",')
     p.write_text(text, encoding='utf-8')
     # The commercial desktop does not expose an unauthenticated automation surface.
     patch('apps/photocraft/src/main.rs',
