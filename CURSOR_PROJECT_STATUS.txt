@@ -1,3 +1,25 @@
+CURRENT RELEASE UPDATE — 2026-11-09, 4:30 PM America/New_York
+This update supersedes older release/build status in the historical snapshot below.
+PixaShop v0.20.3 is published and GitHub /releases/latest returns v0.20.3.
+The uploaded Mac installer matches GitHub's release digest:
+3d9ac99325f10ab2a319ae0200a8fda49f9b8e3b4a8ea18f0e03ade275f9dab7
+Filename: pixashop-0.20.3-macos-universal.dmg; size 88,371,443 bytes.
+Owner confirmed it came from the signing script's successful signed/notarized release output.
+No private signing key or credentials were uploaded.
+Windows and Linux 0.20.3 assets and checksums are also published.
+Website PIXASHOP_RELEASE_TAG is now v0.20.3 for Production and Preview.
+Production deployment is READY and aliased to aiwebdesignfirm.com:
+dpl_5nYkULwZBNcNDvCuSMRkxCKXpjhg
+https://aiwebdesignfirm-gw7gznuiu-luke-bargers-projects.vercel.app
+All 523 live source file references were preserved; only the release environment pin changed.
+Billing behavior and configuration were not changed.
+Real Mac 0.20.2-to-0.20.3 Install and restart testing and full interactive editing QA remain outstanding.
+Automated CI signing is NOT configured by this release update; credentials remain on the owner's Mac.
+Do not rerun old cancelled builds just to publish 0.20.3: its release artifacts now exist.
+Retain the website-source preservation and credential handling requirements below.
+
+----- HISTORICAL SNAPSHOT: 2026-11-09 9:40 AM -----
+
 PIXASHOP / AIWEBDESIGNFIRM — CURSOR PROJECT STATUS
 Last checked: 2026-11-09, 9:40 AM America/New_York
 This is a status snapshot, not an automatic monitoring feed. Refresh remote state before acting.
