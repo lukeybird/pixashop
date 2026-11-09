@@ -11,7 +11,9 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-24.04, windows-latest, macos-15]
+        # macos-15 is arm64 and is not acquiring hosted runners right now.
+        # macos-15-intel is a standard Intel image and still builds both slices.
+        os: [ubuntu-24.04, windows-latest, macos-15-intel]
     runs-on: ${{ matrix.os }}
     timeout-minutes: 100
     env:
