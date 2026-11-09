@@ -98,6 +98,29 @@ def prepare():
     text = p.read_text(encoding='utf-8').replace('pub const TUTORIALS: &str = "https://aiwebdesignfirm.com/pixashop";', 'pub const TUTORIALS: &str = "https://aiwebdesignfirm.com/pixashop/manual";')
     text = text.replace('                "help.website",', '                "help.manual",\n                "help.website",')
     p.write_text(text, encoding='utf-8')
+    # Read-only coaching bubbles use live toolbar rectangles, never image-edit commands.
+    patch('crates/ui-egui/src/lib.rs', 'mod pixashop_manual;', 'mod pixashop_manual;\nmod pixashop_tour;')
+    patch('crates/engine/src/shell_commands.rs',
+          '    ("help.manual", "PixaShop User Manual…", &["Help"], None),',
+          '    ("help.manual", "PixaShop User Manual…", &["Help"], None),\n    ("help.toolTour", "Quick Tool Tour…", &["Help"], None),')
+    patch('crates/ui-egui/src/menus/state.rs',
+          '        "help.manual" => true,',
+          '        "help.manual" | "help.toolTour" => true,')
+    patch('crates/ui-egui/src/menus/invoke.rs',
+          '    if id == "help.manual" {',
+          '    if id == "help.toolTour" { crate::pixashop_tour::open(ctx); return Some(Ok(json!({"tour": true}))); }\n    if id == "help.manual" {')
+    patch('crates/ui-egui/src/app/frame.rs',
+          '        let home = self.home_screen_up();',
+          '        crate::pixashop_tour::begin_frame(&ctx);\n        let home = self.home_screen_up();')
+    patch('crates/ui-egui/src/app/frame.rs',
+          '        crate::pixashop_manual::show(self, &ctx);',
+          '        crate::pixashop_manual::show(self, &ctx);\n        crate::pixashop_tour::show(self, &ctx);')
+    patch('crates/ui-egui/src/panels/toolbar.rs',
+          '                                    if slot.len() > 1 {',
+          '                                    crate::pixashop_tour::note_slot(ui, slot, resp.rect);\n                                    if slot.len() > 1 {')
+    p = ROOT / 'crates/ui-egui/src/links.rs'
+    text = p.read_text(encoding='utf-8').replace('                "help.manual",\n                "help.website",', '                "help.manual",\n                "help.toolTour",\n                "help.website",')
+    p.write_text(text, encoding='utf-8')
     # The commercial desktop does not expose an unauthenticated automation surface.
     patch('apps/photocraft/src/main.rs',
           '    let (port, warning) = control_port_for(cli_port, &integrations(services::prefs_file().as_deref()));',

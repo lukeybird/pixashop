@@ -68,3 +68,7 @@ The current online manual is https://aiwebdesignfirm.com/pixashop/manual, also l
 The next desktop version, 0.20.3, adds Help → PixaShop User Manual. Its searchable chapter window embeds `pixashop/manual/guide.json` in the binary and does not fetch the guide over the network. The window also links to the online manual. Account access checks still require internet access. The Markdown edition is `pixashop/manual/PixaShop-User-Manual.md`.
 
 The 0.20.3 source must pass native checks, then its Mac app and DMG must be signed and notarized before publishing a new update. Do not replace the signed 0.20.2 release assets with a rebuilt binary using the same version number.
+
+### Quick tool tour (0.20.3)
+
+Help → Quick Tool Tour opens a read-only coaching bubble for every registered toolbox tool (currently 68), in actual toolbar order. Each step describes the tool, a short usage instruction, and the current keyboard shortcut if assigned. Back, Next/Done, Skip, a tool picker, and a Manual button provide navigation. The tour outlines the tool's toolbar group and scrolls the toolbox when needed. Grouped tools are explained individually; a note explains how to open the flyout. No tour navigation invokes a tool-selection or image-editing command, creates a document, or changes panel preferences. The current image and selected tool are preserved. The guide and tour are bundled in the same next signed 0.20.3 build.
