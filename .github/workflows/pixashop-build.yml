@@ -15,7 +15,8 @@ jobs:
         # macos-15-intel is a standard Intel image and still builds both slices.
         os: [ubuntu-24.04, windows-latest, macos-15-intel]
     runs-on: ${{ matrix.os }}
-    timeout-minutes: 100
+    # Intel Mac release builds exceed the default 100 minutes.
+    timeout-minutes: 180
     env:
       PYTHONUTF8: '1'
       CARGO_BUILD_JOBS: '2'
