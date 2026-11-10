@@ -171,3 +171,7 @@ Shape Tools changes from that branch are not included.
 ## PixaShop product identity
 
 The PixaShop pixel-grid P app icon is an original code-generated asset in `pixashop/icons.py`. The PixaShop product overlay and account integration are by AIWebDesignFirm. Upstream contributor and third-party notices above remain unchanged.
+
+
+## Pixa product-initial icon revision
+`pixashop/icons.py` generates the original pixel S letterform in raster and SVG formats. Author: AIWebDesignFirm. Source: original work. License: MIT OR Apache-2.0. Generated assets retain their existing packaging attribution sidecars. No third-party artwork or fonts.
