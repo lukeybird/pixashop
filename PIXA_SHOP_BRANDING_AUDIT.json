@@ -1,0 +1,31 @@
+{
+  "product": "PixaShop",
+  "candidate_version": "0.20.4",
+  "base_source": "e889b17a355a3108992eb206ea48aaf9b9b3c7cf",
+  "source_branding_checks": "passed",
+  "tests": {
+    "command": "python -m unittest discover -s pixashop/tests -v",
+    "passed": 11
+  },
+  "changes": [
+    "Retire upstream promotional translation keys",
+    "Replace upstream AppStream website/help/community links and publisher metadata",
+    "Remove upstream screenshot from product AppStream metadata",
+    "Use existing original S icon generator",
+    "Emit per-installer source-commit and digest receipt"
+  ],
+  "preserved": [
+    "Copyrights, legal notices and contributor credits",
+    "Internal crate and native file-format identities",
+    "Existing release tags and installers",
+    "Billing and activation behavior"
+  ],
+  "not_verified": [
+    "Full native compile of this revision",
+    "Installed GUI branding and translations on Mac/Windows/Linux",
+    "Signed/notarized 0.20.4 release",
+    "Fresh website download of 0.20.4"
+  ],
+  "release_tag_warning": "v0.20.3 resolves to an upstream source commit without the PixaShop overlay. Do not move that existing tag. Bind the next release tag and build receipts to the actual product source commit.",
+  "completion": "Source audit passed. Full shipped-product branding remains pending until rebuilt installer acceptance."
+}

@@ -1,3 +1,9 @@
+PIXASHOP 0.20.4 BRANDING CLEANUP — SOURCE VERIFIED; INSTALLER PENDING
+Read PIXA_SHOP_BRANDING_AUDIT.json. Product overlay now retires upstream promotional translation keys, cleans Linux AppStream/vendor/help/community metadata and removes the upstream promotional screenshot. Existing original S icon generation is retained. All 11 Python branding/restart/tool-tour tests pass after preparation; no full native build or installed GUI acceptance is claimed. Native Rust toolchain is absent in this workspace. Current workflow is unchanged and should build this product-path commit. Package output now contains a source-commit/digest .build.json receipt alongside installer/checksum.
+Version is bumped to 0.20.4; never overwrite v0.20.3 artifacts or move its tag. The v0.20.3 tag resolves to source without the PixaShop overlay, so it is not adequate build provenance. Next release tag must resolve to actual product build source and receipts must match it.
+Next: obtain all current CI artifacts; test actual GUI branding, Help/manual, translated UI and install/update flow; sign/notarize the final Mac candidate with existing local Keychain credentials; publish only verified 0.20.4 assets with receipts/checksums. No signing key export. No website/billing/download flags changed. The website branding light stays pending until the shipped installer is verified. Preserve all earlier production-source restrictions.
+
+PRIOR HISTORY (preserved):
 CURRENT RELEASE UPDATE — 2026-11-09, 4:30 PM America/New_York
 This update supersedes older release/build status in the historical snapshot below.
 PixaShop v0.20.3 is published and GitHub /releases/latest returns v0.20.3.

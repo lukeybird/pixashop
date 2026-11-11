@@ -45,6 +45,10 @@ def package():
         with tarfile.open(asset,'w:gz') as archive:archive.add(stage,arcname='PixaShop')
     digest=hashlib.sha256(asset.read_bytes()).hexdigest()
     (out/(asset.name+'.sha256')).write_text(f'{digest}  {asset.name}\n')
+    # Bind the artifact to product source, not an unrelated upstream release tag.
+    source_commit=subprocess.run(['git','rev-parse','HEAD'],cwd=ROOT,check=True,capture_output=True,text=True).stdout.strip()
+    receipt={'product':'PixaShop','version':version,'source_commit':source_commit,'asset':asset.name,'sha256':digest,'signed':False,'status':'testing-only','branding_audit':'source checks; installed UI verification still required'}
+    (out/(asset.name+'.build.json')).write_text(json.dumps(receipt,indent=2)+'\n')
     print(json.dumps({'asset':str(asset),'sha256':digest,'signed':False,'status':'testing-only'}))
     return asset
 

@@ -33,7 +33,7 @@ Startup and Help → Check for Updates query only `lukeybird/pixashop` releases.
 
 ## Branding and notices
 
-The icon is an original pixel-grid P from `pixashop/icons.py`; build-time generated icons replace the upstream app icons. Required upstream notices and third-party licenses remain in the package's `Licenses` folder (inside `PixaShop.app/Contents/Resources` on Mac). Upstream contributor credits are preserved. The overlay must not promote the modified app as an ArtCraft product.
+The icon is an original pixel-grid S from `pixashop/icons.py`; build-time generated icons replace the upstream app icons. Required upstream notices and third-party licenses remain in the package's `Licenses` folder (inside `PixaShop.app/Contents/Resources` on Mac). Upstream contributor credits are preserved. The overlay must not promote the modified app as an ArtCraft product.
 
 ## Website integration
 
@@ -72,3 +72,7 @@ The 0.20.3 source must pass native checks, then its Mac app and DMG must be sign
 ### Quick tool tour (0.20.3)
 
 Help → Quick Tool Tour opens a read-only coaching bubble for every registered toolbox tool (currently 68), in actual toolbar order. Each step describes the tool, a short usage instruction, and the current keyboard shortcut if assigned. Back, Next/Done, Skip, a tool picker, and a Manual button provide navigation. The tour outlines the tool's toolbar group and scrolls the toolbox when needed. Grouped tools are explained individually; a note explains how to open the flyout. No tour navigation invokes a tool-selection or image-editing command, creates a document, or changes panel preferences. The current image and selected tool are preserved. The guide and tour are bundled in the same next signed 0.20.3 build.
+
+## Branding audit candidate 0.20.4
+
+See root PIXA_SHOP_BRANDING_AUDIT.json for exact source checks and remaining installed-app acceptance. The product overlay removes upstream promotional translation entries and Linux metadata destinations while preserving credits/notices. Packaging writes a `.build.json` source-commit and digest receipt. New release tags must resolve to the product source used by the build; never move old published tags or replace 0.20.3 assets. The new S icon and these changes require a rebuilt, tested, signed/notarized release before they reach installed users.

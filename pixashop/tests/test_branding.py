@@ -27,3 +27,44 @@ class BrandingTests(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+class ComprehensiveBrandingTests(unittest.TestCase):
+    def test_translated_promotional_keys_are_retired(self):
+        import sys
+        sys.path.insert(0, str(ROOT / 'pixashop'))
+        from branding import clean_catalog
+        before = '\tArtCraft Website\tSite ArtCraft\n\tArtCraft\tArtCraft\n\tJoin the ArtCraft Discord…\tDiscord\n\tContributors\tContributors\n# Copyright ArtCraft contributors\n'
+        self.assertEqual(clean_catalog(before), '\tContributors\tContributors\n# Copyright ArtCraft contributors\n')
+        if not (ROOT / 'pixashop/.prepared').exists():
+            self.skipTest('Run preparation to audit generated catalogs')
+        for file in (ROOT / 'crates/ui-egui/src/i18n').glob('*.tsv'):
+            for line in file.read_text().splitlines():
+                fields = line.split('\t')
+                key = fields[1] if len(fields) >= 3 else ''
+                self.assertFalse(key == 'ArtCraft' or 'ArtCraft Website' in key or 'Join the ArtCraft Discord' in key, str(file))
+
+    def test_packaging_promotional_metadata_is_ours(self):
+        import sys
+        sys.path.insert(0, str(ROOT / 'pixashop'))
+        from branding import clean_packaging
+        fixture = '<screenshots><image>upstream</image></screenshots>\n  <screenshots>old</screenshots>\n<url>https://discord.gg/artcraft</url>\nvendor: Learning Machines LLC\n'
+        cleaned = clean_packaging(fixture, 'product.metainfo.xml.in')
+        self.assertNotIn('  <screenshots>', cleaned)
+        self.assertNotIn('discord.gg', cleaned)
+        self.assertIn('vendor: AIWebDesignFirm', cleaned)
+        if not (ROOT / 'pixashop/.prepared').exists():
+            self.skipTest('Run preparation to audit generated metadata')
+        for relative in ['packaging/linux/nfpm.yaml', 'packaging/linux/com.aiwebdesignfirm.pixashop.metainfo.xml.in']:
+            text = (ROOT / relative).read_text()
+            for forbidden in ['getartcraft.com', 'discord.gg/artcraft', 'Learning Machines LLC', 'https://github.com/storytold/photocraft', '<screenshots>']:
+                self.assertNotIn(forbidden, text, relative)
+
+    def test_own_manual_update_channel_and_icon(self):
+        self.assertIn("render('S',", (ROOT / 'pixashop/icons.py').read_text())
+        for path in ['pixashop/manual/guide.json', 'pixashop/manual/tools.json']:
+            text = (ROOT / path).read_text()
+            for forbidden in ['getartcraft.com', 'discord.gg/artcraft', 'https://github.com/storytold/photocraft']:
+                self.assertNotIn(forbidden, text)
+        for file in (ROOT / 'pixashop/overlay').rglob('*.rs'):
+            self.assertNotIn('api.github.com/repos/storytold/', file.read_text())
+        self.assertIn("'.build.json'", (ROOT / 'pixashop/package.py').read_text())
