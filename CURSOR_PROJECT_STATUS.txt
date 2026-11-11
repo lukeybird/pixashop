@@ -1,3 +1,20 @@
+PIXASHOP 0.20.4 — SIGNED MAC INSTALLER PUBLISHED; WEBSITE PIN UNCHANGED
+Recorded 2026-11-10, 11:11 PM America/New_York.
+Source commit: 5b4551b95c632910dbb546df2797245380aa6942
+Build: https://github.com/lukeybird/pixashop/actions/runs/42946140053
+Release: https://github.com/lukeybird/pixashop/releases/tag/v0.20.4
+Tag v0.20.4 points at that product source commit.
+Mac asset: pixashop-0.20.4-macos-universal.dmg
+Size: 88,342,080 bytes
+SHA-256: bdb0b5a4d0cd9830023bdf1e4c6908dea69c694b0bbf21f21fb5922e88ef3245
+The GitHub release digest matches that checksum.
+Signed with Developer ID. Notarization submission e95c55a5-3d88-46a8-a777-ba7d5c91677c was Accepted, then stapled. Gatekeeper accepted the DMG.
+The product owner tested the Mac app and confirmed it is good.
+Windows and Linux 0.20.4 assets from the same source build are published unsigned. They were not tested on those systems.
+The v0.20.3 tag and assets were not moved or overwritten. The v0.20.3 tag remains f66bf92f428bd551a69ee53262ed3858b50cd3fe.
+Website PIXASHOP_RELEASE_TAG was not changed. The saved Vercel login is invalid, so the live download still serves the existing pin. Do not deploy stale website main.
+No signing credentials were uploaded.
+
 PIXASHOP 0.20.4 BRANDING CLEANUP — SOURCE VERIFIED; INSTALLER PENDING
 Read PIXA_SHOP_BRANDING_AUDIT.json. Product overlay now retires upstream promotional translation keys, cleans Linux AppStream/vendor/help/community metadata and removes the upstream promotional screenshot. Existing original S icon generation is retained. All 11 Python branding/restart/tool-tour tests pass after preparation; no full native build or installed GUI acceptance is claimed. Native Rust toolchain is absent in this workspace. Current workflow is unchanged and should build this product-path commit. Package output now contains a source-commit/digest .build.json receipt alongside installer/checksum.
 Version is bumped to 0.20.4; never overwrite v0.20.3 artifacts or move its tag. The v0.20.3 tag resolves to source without the PixaShop overlay, so it is not adequate build provenance. Next release tag must resolve to actual product build source and receipts must match it.
