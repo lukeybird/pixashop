@@ -1,0 +1,120 @@
+name: Prepare PixaShop testing release
+on:
+  push:
+    branches: [pixashop-product]
+    paths: [.github/workflows/pixashop-publish.yml]
+  workflow_dispatch:
+permissions:
+  contents: write
+  actions: read
+concurrency:
+  group: pixashop-testing-release-0.20.1
+  cancel-in-progress: true
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 100
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      PIXASHOP_SOURCE_SHA: 02b97b65275fdc92e38406485fe9396fb3e310ea
+    steps:
+      - name: Verify live pairing and access boundaries
+        run: |
+          python3 - <<'PYTEST'
+          import json, urllib.request, urllib.error
+          def post(body,origin=None):
+              headers={'Content-Type':'application/json','User-Agent':'PixaShop-release-verification'}
+              if origin:headers['Origin']=origin
+              req=urllib.request.Request('https://aiwebdesignfirm.com/api/pixashop/device',data=json.dumps(body).encode(),headers=headers)
+              try:
+                  with urllib.request.urlopen(req,timeout=20) as r:return r.status,json.load(r)
+              except urllib.error.HTTPError as e:return e.code,json.load(e)
+          status,pair=post({'action':'begin'})
+          assert status==200 and len(pair.get('token',''))==64 and len(pair.get('code',''))==10,'Pairing service is unavailable'
+          status,check=post({'action':'check','token':pair['token']})
+          assert status==200 and check.get('access') is False and check.get('accessSeconds')==0,'Unapproved device must not have access'
+          status,denied=post({'action':'revoke-all'},'https://invalid.example')
+          assert status==403,'Cross-origin changes must be denied'
+          status,denied=post({'action':'check','token':'invalid'})
+          assert status==200 and denied.get('access') is False,'Invalid tokens must be denied'
+          print('Live pairing, pending access, invalid-token and origin checks passed. Temporary pairing expires automatically.')
+          PYTEST
+      - name: Wait for this commit's desktop build run
+        run: |
+          for attempt in $(seq 1 30); do
+            build_run=$(gh api "repos/$GH_REPO/actions/workflows/pixashop-build.yml/runs?head_sha=$PIXASHOP_SOURCE_SHA&event=push&per_page=1" --jq '.workflow_runs[0].id // empty')
+            if [ -n "$build_run" ]; then break; fi
+            echo "Waiting for the desktop build run ($attempt/30)"
+            sleep 3
+          done
+          test -n "$build_run"
+          echo "PIXASHOP_BUILD_RUN=$build_run" >> "$GITHUB_ENV"
+          for attempt in $(seq 1 180); do
+            conclusion=$(gh api "repos/$GH_REPO/actions/runs/$build_run/jobs?per_page=100" --jq '.jobs[] | select(.name == "build (macos-15)") | .conclusion // empty')
+            if [ "$conclusion" = 'success' ]; then break; fi
+            if [ -n "$conclusion" ]; then echo "macOS build failed: $conclusion"; exit 1; fi
+            echo "Waiting for the macOS installer ($attempt/180)"
+            sleep 30
+          done
+          test "$conclusion" = 'success' 
+      - name: Verify source commit and download packages
+        run: |
+          test "$(gh api "repos/$GH_REPO/actions/runs/$PIXASHOP_BUILD_RUN" --jq .head_sha)" = "$PIXASHOP_SOURCE_SHA"
+          gh run download "$PIXASHOP_BUILD_RUN" --name PixaShop-macOS-testing --dir packages
+      - name: Validate all platform packages and checksums
+        run: |
+          python3 - <<'PY'
+          import hashlib
+          from pathlib import Path
+          names=['pixashop-0.20.1-macos-universal.dmg']
+          out=Path('release-assets');out.mkdir()
+          for name in names:
+              matches=list(Path('packages').rglob(name))
+              if len(matches)!=1:raise SystemExit('Expected exactly one package: '+name)
+              package=matches[0]
+              if package.stat().st_size<1000000:raise SystemExit('Package is unexpectedly small: '+name)
+              check=package.with_name(name+'.sha256')
+              expected=check.read_text().split()[0]
+              actual=hashlib.sha256(package.read_bytes()).hexdigest()
+              if actual!=expected:raise SystemExit('Checksum mismatch: '+name)
+              (out/name).write_bytes(package.read_bytes())
+              (out/check.name).write_bytes(check.read_bytes())
+          PY
+      - name: Publish clearly labeled early access installers
+        run: |
+          cat > notes.md <<'NOTES'
+          PixaShop by AIWebDesignFirm — early access testing build.
+
+          Built from the source commit identified by the release tag. Native compilation and activation-module tests pass before each platform is published. macOS is posted first; Windows and Linux follow when their builds pass. SHA-256 checksums accompany each package.
+
+          These builds have not completed interactive platform QA. macOS is ad-hoc signed, without Apple notarization; Windows is unsigned. This is not a stable customer release. Account activation requires the PixaShop website integration to be deployed and enabled.
+
+          Open documents and preferences should be backed up before testing. Updates prompt for a new installer; automatic installation is disabled.
+          NOTES
+          if gh release view v0.20.1 >/dev/null 2>&1; then
+            echo 'Release already exists; refusing to overwrite its assets.'
+            exit 1
+          fi
+          gh release create v0.20.1 --target "$PIXASHOP_SOURCE_SHA" --prerelease --title 'PixaShop 0.20.1 — early access testing' --notes-file notes.md release-assets/*
+      - name: Wait for the remaining platform builds
+        run: gh run watch "$PIXASHOP_BUILD_RUN" --exit-status --interval 30
+      - name: Download the remaining verified installers
+        run: |
+          gh run download "$PIXASHOP_BUILD_RUN" --name PixaShop-Windows-testing --dir packages-remaining/windows
+          gh run download "$PIXASHOP_BUILD_RUN" --name PixaShop-Linux-testing --dir packages-remaining/linux
+      - name: Verify remaining checksums and attach installers
+        run: |
+          python3 - <<'PYVERIFY'
+          import hashlib,shutil
+          from pathlib import Path
+          for name in ['pixashop-0.20.1-windows-x64-portable.zip','pixashop-0.20.1-linux-x86_64.tar.gz']:
+              matches=list(Path('packages-remaining').rglob(name))
+              if len(matches)!=1:raise SystemExit('Expected one package: '+name)
+              package=matches[0];check=package.with_name(name+'.sha256')
+              if package.stat().st_size<1000000:raise SystemExit('Package unexpectedly small: '+name)
+              if hashlib.sha256(package.read_bytes()).hexdigest()!=check.read_text().split()[0]:raise SystemExit('Checksum mismatch: '+name)
+              shutil.copy2(package,Path('release-assets')/name)
+              shutil.copy2(check,Path('release-assets')/check.name)
+          PYVERIFY
+          gh release upload v0.20.1 release-assets/*windows* release-assets/*linux*

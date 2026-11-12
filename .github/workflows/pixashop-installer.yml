@@ -1,0 +1,66 @@
+name: PixaShop Mac installer checks
+on:
+  push:
+    branches: [pixashop-installer]
+    paths: [pixashop/macos_dmg.py, .github/workflows/pixashop-installer.yml]
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  installer:
+    runs-on: macos-15
+    timeout-minutes: 20
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install DMG layout tools
+        run: python -m pip install dmgbuild==1.6.7
+      - name: Download verified existing Mac application
+        run: |
+          gh run download 42426402771 --name PixaShop-macOS-testing --dir original
+          cd original
+          shasum -a 256 -c pixashop-0.20.1-macos-universal.dmg.sha256
+      - name: Extract original signed application
+        run: |
+          mkdir -p work/mount dist
+          hdiutil attach original/pixashop-0.20.1-macos-universal.dmg -readonly -nobrowse -mountpoint "$PWD/work/mount"
+          ditto work/mount/PixaShop.app work/PixaShop.app
+          hdiutil detach "$PWD/work/mount"
+          codesign --verify --deep --strict work/PixaShop.app
+          lipo -archs work/PixaShop.app/Contents/MacOS/pixashop
+      - name: Build drag-to-Applications installer
+        run: python pixashop/macos_dmg.py work/PixaShop.app dist/pixashop-0.20.1-macos-universal.dmg
+      - name: Verify installer layout and unchanged application
+        run: |
+          hdiutil verify dist/pixashop-0.20.1-macos-universal.dmg
+          hdiutil attach dist/pixashop-0.20.1-macos-universal.dmg -readonly -nobrowse -mountpoint "$PWD/work/mount"
+          test "$(readlink work/mount/Applications)" = '/Applications'
+          diff -rq work/PixaShop.app work/mount/PixaShop.app
+          codesign --verify --deep --strict work/mount/PixaShop.app
+          python - <<'PY'
+          from ds_store import DSStore
+          from pathlib import Path
+          p=Path('work/mount')
+          backgrounds=[f for f in p.iterdir() if f.name.startswith('.background') and f.is_file()]
+          assert backgrounds and all(f.stat().st_size > 0 for f in backgrounds), 'Missing installer arrow background'
+          with DSStore.open(str(p/'.DS_Store'),'r') as store:
+              assert store['PixaShop.app']['Iloc']==(140,120)
+              assert store['Applications']['Iloc']==(500,120)
+          print('Applications shortcut, arrow background, icon positions and unchanged app verified')
+          PY
+          hdiutil detach "$PWD/work/mount"
+          cd dist
+          shasum -a 256 pixashop-0.20.1-macos-universal.dmg > pixashop-0.20.1-macos-universal.dmg.sha256
+      - uses: actions/upload-artifact@v4
+        with:
+          name: PixaShop-Mac-drag-installer
+          path: dist/*
+          if-no-files-found: error
+          retention-days: 30
+

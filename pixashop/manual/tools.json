@@ -1,0 +1,410 @@
+[
+  {
+    "id": "tools.select.move",
+    "title": "Move Tool",
+    "description": "Move and arrange a layer or selection.",
+    "try_it": "Choose the intended layer, then drag it on the canvas."
+  },
+  {
+    "id": "tools.select.artboard",
+    "title": "Artboard Tool",
+    "description": "Organize designs into separate canvas areas.",
+    "try_it": "Use the artboard controls to create, select, or resize an artboard."
+  },
+  {
+    "id": "tools.select.rectMarquee",
+    "title": "Rectangular Marquee Tool",
+    "description": "Select a rectangular area.",
+    "try_it": "Drag a box around the part of the image you want to affect."
+  },
+  {
+    "id": "tools.select.ellipseMarquee",
+    "title": "Elliptical Marquee Tool",
+    "description": "Select an oval or circular area.",
+    "try_it": "Drag an oval around the area you want to affect."
+  },
+  {
+    "id": "tools.select.singleRowMarquee",
+    "title": "Single Row Marquee Tool",
+    "description": "Select one horizontal row of pixels.",
+    "try_it": "Click the row you want to select."
+  },
+  {
+    "id": "tools.select.singleColumnMarquee",
+    "title": "Single Column Marquee Tool",
+    "description": "Select one vertical column of pixels.",
+    "try_it": "Click the column you want to select."
+  },
+  {
+    "id": "tools.select.lasso",
+    "title": "Lasso Tool",
+    "description": "Draw a freehand selection.",
+    "try_it": "Drag around an area and close the outline."
+  },
+  {
+    "id": "tools.select.polygonLasso",
+    "title": "Polygonal Lasso Tool",
+    "description": "Build a selection from straight edges.",
+    "try_it": "Click successive corners, then close the outline."
+  },
+  {
+    "id": "tools.select.magneticLasso",
+    "title": "Magnetic Lasso Tool",
+    "description": "Trace a selection along visible edges.",
+    "try_it": "Follow a contrasting edge and close the outline; check the result before editing."
+  },
+  {
+    "id": "tools.select.objectSelection",
+    "title": "Object Selection Tool",
+    "description": "Find an object inside an area you indicate.",
+    "try_it": "Enclose the object, inspect the selection, and refine any missed edges."
+  },
+  {
+    "id": "tools.select.quickSelection",
+    "title": "Quick Selection Tool",
+    "description": "Grow a selection by brushing over an object.",
+    "try_it": "Paint inside the object and refine the selection near its edges."
+  },
+  {
+    "id": "tools.select.magicWand",
+    "title": "Magic Wand Tool",
+    "description": "Select an area by similar colors.",
+    "try_it": "Click a color and adjust tolerance to include more or less of the image."
+  },
+  {
+    "id": "tools.select.crop",
+    "title": "Crop Tool",
+    "description": "Trim the image to a new boundary.",
+    "try_it": "Drag and adjust the crop frame, then confirm the crop."
+  },
+  {
+    "id": "tools.select.perspectiveCrop",
+    "title": "Perspective Crop Tool",
+    "description": "Crop while straightening a tilted surface.",
+    "try_it": "Place the crop corners around the surface, then confirm."
+  },
+  {
+    "id": "tools.select.slice",
+    "title": "Slice Tool",
+    "description": "Divide a design into export regions.",
+    "try_it": "Drag slice boundaries around the regions you want to organize."
+  },
+  {
+    "id": "tools.select.sliceSelect",
+    "title": "Slice Select Tool",
+    "description": "Select and adjust existing slices.",
+    "try_it": "Click a slice to move or resize its boundary."
+  },
+  {
+    "id": "tools.select.frame",
+    "title": "Frame Tool",
+    "description": "Create an image container.",
+    "try_it": "Drag a frame and use its content controls to place and adjust an image."
+  },
+  {
+    "id": "tools.select.eyedropper",
+    "title": "Eyedropper Tool",
+    "description": "Sample a color from the image.",
+    "try_it": "Click the color you want to use for painting."
+  },
+  {
+    "id": "tools.select.colorSampler",
+    "title": "Color Sampler Tool",
+    "description": "Keep reference points for checking colors.",
+    "try_it": "Place sample points and inspect their color readings."
+  },
+  {
+    "id": "tools.select.ruler",
+    "title": "Ruler Tool",
+    "description": "Measure distance and angles.",
+    "try_it": "Drag between two points and review the measurement controls."
+  },
+  {
+    "id": "tools.select.note",
+    "title": "Note Tool",
+    "description": "Attach a comment to the document.",
+    "try_it": "Click where the note belongs and enter its text."
+  },
+  {
+    "id": "tools.select.count",
+    "title": "Count Tool",
+    "description": "Mark and count items in an image.",
+    "try_it": "Click each item you want included in the count."
+  },
+  {
+    "id": "tools.select.spotHealing",
+    "title": "Spot Healing Brush Tool",
+    "description": "Blend small blemishes into nearby surroundings.",
+    "try_it": "Use a brush slightly larger than the blemish and make a short stroke."
+  },
+  {
+    "id": "tools.select.remove",
+    "title": "Remove Tool",
+    "description": "Retouch an unwanted object or distraction.",
+    "try_it": "Brush over the unwanted area, then inspect the replacement for artifacts."
+  },
+  {
+    "id": "tools.select.healing",
+    "title": "Healing Brush Tool",
+    "description": "Blend texture from a sampled source into a target area.",
+    "try_it": "Set a source using the sampling modifier shown by the tool, then brush the target."
+  },
+  {
+    "id": "tools.select.patch",
+    "title": "Patch Tool",
+    "description": "Repair a selected area with another image region.",
+    "try_it": "Outline the problem area and use the patch controls to choose replacement content."
+  },
+  {
+    "id": "tools.select.contentAwareMove",
+    "title": "Content-Aware Move Tool",
+    "description": "Move an object while repairing its old location.",
+    "try_it": "Select the object, move it, and inspect both the old and new edges."
+  },
+  {
+    "id": "tools.select.redEye",
+    "title": "Red Eye Tool",
+    "description": "Reduce red-eye in flash portraits.",
+    "try_it": "Click the affected pupil and review the correction."
+  },
+  {
+    "id": "tools.select.brush",
+    "title": "Brush Tool",
+    "description": "Paint soft or textured strokes.",
+    "try_it": "Choose a color, brush size, and opacity, then drag on a paintable layer."
+  },
+  {
+    "id": "tools.select.pencil",
+    "title": "Pencil Tool",
+    "description": "Paint crisp, hard-edged pixels.",
+    "try_it": "Choose a small size for precise pixel work, then draw."
+  },
+  {
+    "id": "tools.select.colorReplacement",
+    "title": "Color Replacement Tool",
+    "description": "Replace a sampled color while brushing.",
+    "try_it": "Choose a replacement color and brush over the target area; review tolerance settings."
+  },
+  {
+    "id": "tools.select.mixerBrush",
+    "title": "Mixer Brush Tool",
+    "description": "Blend paint colors in brush strokes.",
+    "try_it": "Review the mixing and wetness controls, then paint on a suitable layer."
+  },
+  {
+    "id": "tools.select.cloneStamp",
+    "title": "Clone Stamp Tool",
+    "description": "Copy image pixels from a sampled source.",
+    "try_it": "Set a source using the sampling modifier shown by the tool, then paint the copy."
+  },
+  {
+    "id": "tools.select.patternStamp",
+    "title": "Pattern Stamp Tool",
+    "description": "Paint with a repeating pattern.",
+    "try_it": "Choose a pattern and brush size, then paint on a suitable layer."
+  },
+  {
+    "id": "tools.select.historyBrush",
+    "title": "History Brush Tool",
+    "description": "Brush back content from a history source.",
+    "try_it": "Choose the intended history source before painting the area to restore."
+  },
+  {
+    "id": "tools.select.artHistoryBrush",
+    "title": "Art History Brush Tool",
+    "description": "Repaint from a history source with stylized strokes.",
+    "try_it": "Choose a history source and style, then try a short stroke."
+  },
+  {
+    "id": "tools.select.eraser",
+    "title": "Eraser Tool",
+    "description": "Remove pixels from a paintable layer.",
+    "try_it": "Brush over the area you want to erase; use a mask when you want a reversible hide."
+  },
+  {
+    "id": "tools.select.backgroundEraser",
+    "title": "Background Eraser Tool",
+    "description": "Erase around a sampled background color.",
+    "try_it": "Work along the edge and adjust sampling and tolerance for your image."
+  },
+  {
+    "id": "tools.select.magicEraser",
+    "title": "Magic Eraser Tool",
+    "description": "Erase areas of similar color with a click.",
+    "try_it": "Click the target color and check the tolerance before repeating."
+  },
+  {
+    "id": "tools.select.gradient",
+    "title": "Gradient Tool",
+    "description": "Fill an area with a gradual color transition.",
+    "try_it": "Choose the gradient colors and style, then drag to set its direction and distance."
+  },
+  {
+    "id": "tools.select.paintBucket",
+    "title": "Paint Bucket Tool",
+    "description": "Fill a color region.",
+    "try_it": "Choose a fill color and click the region; tolerance controls how far the fill spreads."
+  },
+  {
+    "id": "tools.select.blur",
+    "title": "Blur Tool",
+    "description": "Soften local detail and edges.",
+    "try_it": "Brush lightly over the area you want to soften."
+  },
+  {
+    "id": "tools.select.sharpen",
+    "title": "Sharpen Tool",
+    "description": "Increase local edge contrast.",
+    "try_it": "Use short, low-strength strokes and watch for halos."
+  },
+  {
+    "id": "tools.select.smudge",
+    "title": "Smudge Tool",
+    "description": "Drag nearby colors into one another.",
+    "try_it": "Drag across an edge to push and blend pixels."
+  },
+  {
+    "id": "tools.select.dodge",
+    "title": "Dodge Tool",
+    "description": "Lighten selected areas with a brush.",
+    "try_it": "Use low exposure and build the effect with short strokes."
+  },
+  {
+    "id": "tools.select.burn",
+    "title": "Burn Tool",
+    "description": "Darken selected areas with a brush.",
+    "try_it": "Use low exposure and build the effect gradually."
+  },
+  {
+    "id": "tools.select.sponge",
+    "title": "Sponge Tool",
+    "description": "Change color intensity locally.",
+    "try_it": "Choose the saturation mode, then brush the area."
+  },
+  {
+    "id": "tools.select.pen",
+    "title": "Pen Tool",
+    "description": "Draw precise paths with anchor points.",
+    "try_it": "Click for straight segments and drag a point to shape a curve."
+  },
+  {
+    "id": "tools.select.freeformPen",
+    "title": "Freeform Pen Tool",
+    "description": "Sketch a path freehand.",
+    "try_it": "Draw the outline and refine its anchor points afterward."
+  },
+  {
+    "id": "tools.select.curvaturePen",
+    "title": "Curvature Pen Tool",
+    "description": "Build a path with smooth curves.",
+    "try_it": "Place points along the outline and adjust the curve through them."
+  },
+  {
+    "id": "tools.select.addAnchorPoint",
+    "title": "Add Anchor Point Tool",
+    "description": "Add an editable point to a path.",
+    "try_it": "Click the path where you need more control."
+  },
+  {
+    "id": "tools.select.deleteAnchorPoint",
+    "title": "Delete Anchor Point Tool",
+    "description": "Remove a point from a path.",
+    "try_it": "Click an existing anchor and check how the neighboring curve changes."
+  },
+  {
+    "id": "tools.select.convertPoint",
+    "title": "Convert Point Tool",
+    "description": "Change the way a path bends at an anchor.",
+    "try_it": "Adjust the point and its handles to switch between a corner and a curve."
+  },
+  {
+    "id": "tools.select.type",
+    "title": "Horizontal Type Tool",
+    "description": "Add editable horizontal text.",
+    "try_it": "Click for a line of text or drag for a text box, then type."
+  },
+  {
+    "id": "tools.select.verticalType",
+    "title": "Vertical Type Tool",
+    "description": "Add editable vertical text.",
+    "try_it": "Click or drag a text area, then type and adjust the text controls."
+  },
+  {
+    "id": "tools.select.verticalTypeMask",
+    "title": "Vertical Type Mask Tool",
+    "description": "Turn vertical lettering into a selection.",
+    "try_it": "Type vertically and use the letter-shaped selection to limit an edit."
+  },
+  {
+    "id": "tools.select.horizontalTypeMask",
+    "title": "Horizontal Type Mask Tool",
+    "description": "Turn horizontal lettering into a selection.",
+    "try_it": "Type the words, then use the resulting letter-shaped selection for an edit or mask."
+  },
+  {
+    "id": "tools.select.pathSelection",
+    "title": "Path Selection Tool",
+    "description": "Select and move an entire path.",
+    "try_it": "Click a path, then drag it as a whole."
+  },
+  {
+    "id": "tools.select.directSelection",
+    "title": "Direct Selection Tool",
+    "description": "Edit individual path points and handles.",
+    "try_it": "Select an anchor or handle and drag it to reshape that part of the path."
+  },
+  {
+    "id": "tools.select.rectangle",
+    "title": "Rectangle Tool",
+    "description": "Draw rectangular shapes.",
+    "try_it": "Drag a rectangle and review fill and stroke settings."
+  },
+  {
+    "id": "tools.select.ellipseShape",
+    "title": "Ellipse Tool",
+    "description": "Draw oval or circular shapes.",
+    "try_it": "Drag an ellipse and review fill and stroke settings."
+  },
+  {
+    "id": "tools.select.triangle",
+    "title": "Triangle Tool",
+    "description": "Draw a triangular shape.",
+    "try_it": "Drag to place the triangle, then adjust its appearance."
+  },
+  {
+    "id": "tools.select.polygon",
+    "title": "Polygon Tool",
+    "description": "Draw a multi-sided shape.",
+    "try_it": "Choose the side count in the tool controls, then drag the shape."
+  },
+  {
+    "id": "tools.select.line",
+    "title": "Line Tool",
+    "description": "Draw a straight line.",
+    "try_it": "Drag between its endpoints and adjust stroke settings."
+  },
+  {
+    "id": "tools.select.customShape",
+    "title": "Custom Shape Tool",
+    "description": "Place a shape from the shape presets.",
+    "try_it": "Choose a preset, then drag to size and place it."
+  },
+  {
+    "id": "tools.select.hand",
+    "title": "Hand Tool",
+    "description": "Pan around the view.",
+    "try_it": "Drag the canvas to move your view without moving image pixels."
+  },
+  {
+    "id": "tools.select.rotateView",
+    "title": "Rotate View Tool",
+    "description": "Rotate your view for a comfortable drawing angle.",
+    "try_it": "Drag to rotate the view; this does not rotate the image pixels."
+  },
+  {
+    "id": "tools.select.zoom",
+    "title": "Zoom Tool",
+    "description": "Look closer or see more of the image.",
+    "try_it": "Click or use the zoom controls to change the view magnification."
+  }
+]
