@@ -9,10 +9,10 @@ Your vision. Down to the pixel.
 PixaShop is a desktop image editor by AIWebDesignFirm. Start with a copy of an image you can experiment with.
 
 1. Download the installer for your computer from the PixaShop page. On Mac, open the DMG, drag PixaShop into Applications, and open it from Applications. Close an older copy before replacing it. On Windows or Linux, extract the downloaded archive before opening the app.
-2. If the app shows a device code, choose Activate this device. Sign in on the website with the account that has your trial or subscription, and approve only the code displayed on your own computer.
+2. If the app shows a device code, choose Activate this device. Sign in on the website with your free Pixa account, and approve only the code displayed on your own computer.
 3. Return to PixaShop and choose Check again if the editor has not opened. An internet connection is required for account access checks.
 
-Keep your account password and payment details on the website. The device-approval screen is separate from Apple signing and notarization.
+Enter your account password only on the website. Free Pixa access does not need payment details. The device-approval screen is separate from Apple signing and notarization.
 
 ## Your first edit
 
@@ -117,7 +117,7 @@ Reducing export scale reduces the output dimensions. Save the full-resolution pr
 
 Your image files stay on your computer. PixaShop requires an internet connection to verify account access.
 
-1. Use the PixaShop website’s Settings & billing page to manage your subscription. Removing the app does not cancel a subscription.
+1. Use the Pixa account page to manage your free access and approved devices. No card is required and access has no scheduled account expiration. Existing unrelated paid services, if any, are managed separately.
 2. Choose Help → Check for Updates to look for PixaShop releases from AIWebDesignFirm. The update channel does not install the original PhotoCraft application.
 3. Version 0.20.1 requires a one-time manual installation of 0.20.2 to gain the Mac updater. Version 0.20.2 includes Install and restart for future Mac releases; save open work before using it.
 4. Windows and Linux currently use the website download flow. Close the app before replacing an installation, and keep your project files backed up.

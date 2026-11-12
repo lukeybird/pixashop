@@ -73,7 +73,7 @@ impl AccessApp {
                         if !a.code.is_empty() { self.code = a.code; }
                         if a.access { self.code.clear(); }
                         self.allowed_until = lease(a.access, a.access_seconds, Instant::now());
-                        self.message = if a.access { "Your PixaShop access is active.".into() } else if a.message.is_empty() { "Sign in with an active trial or subscription to continue.".into() } else { a.message };
+                        self.message = if a.access { "Your PixaShop access is active.".into() } else if a.message.is_empty() { "Sign in with your free Pixa account and approve this device to continue.".into() } else { a.message };
                         self.next_check = Instant::now() + Duration::from_secs(if a.access { 240 } else { 10 });
                     }
                     Err(error) => { self.message = error; self.next_check = Instant::now() + Duration::from_secs(30); }
@@ -94,7 +94,7 @@ impl AccessApp {
                     ui.label("Open your account and enter this code. Only approve codes shown on your own device.");
                     if ui.button("Activate this device").clicked() { let _ = open::that(ACTIVATE); }
                 }
-                if ui.button("Start your 7-day trial / Manage billing").clicked() { let _ = open::that("https://aiwebdesignfirm.com/start"); }
+                if ui.button("Your free Pixa account").clicked() { let _ = open::that("https://aiwebdesignfirm.com/account"); }
                 if ui.button("Check again").clicked() { self.start(); }
                 if ui.button("Use another account").clicked() {
                     self.token.clear(); self.code.clear(); self.allowed_until = None;

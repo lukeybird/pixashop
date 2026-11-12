@@ -1,3 +1,7 @@
+## Current free-access candidate — 0.20.5
+
+The production Pixa account service now grants free early access without a card or scheduled account expiration. This candidate updates the activation-screen wording and bundled manual to match. Sign-in, explicit device approval, short monotonic security leases and existing access guards remain in place. No billing endpoint, paid-service subscription, published installer or release setting is changed here. Build artifacts remain unsigned testing candidates until separate platform acceptance and signing. Historical release notes below describe earlier candidates and may refer to the former paid trial.
+
 # PixaShop by AIWebDesignFirm
 
 PixaShop is an independent branded desktop image editor based on PhotoCraft. The product overlay is reproducible: the upstream image engine remains intact and internal Cargo crate names remain `photocraft-*` for compatibility. The app's display name, publisher, executable packaging, icons, website links, account activation and release channel use PixaShop.
@@ -23,9 +27,9 @@ On macOS, install `dmgbuild==1.6.7` with pip for the drag-to-Applications disk i
 
 ## Trial and account access
 
-The app asks the production `/api/pixashop/device` endpoint for a short-lived pairing code. The customer signs in in their system browser at `/pixashop/activate`, confirms the code, and must have an active seven-day Stripe trial or eligible subscription. No password, card data, images or documents are sent by the desktop app. Only a random device token is stored locally; the server stores its SHA-256 digest. Pending pairing expires in ten minutes; activated devices expire in 90 days and can be revoked by the account owner. Access leases are capped at five minutes and use monotonic time. The app checks approximately every four minutes and requires an internet connection. A failed check never deletes local documents.
+The app asks the production `/api/pixashop/device` endpoint for a short-lived pairing code. The customer signs in in their system browser at `/pixashop/activate`, confirms the code, and receives free Pixa early access without a card or scheduled account expiration. No password, card data, images or documents are sent by the desktop app. Only a random device token is stored locally; the server stores its SHA-256 digest. Pending pairing expires in ten minutes; activated devices expire in 90 days and can be revoked by the account owner. Access leases are capped at five minutes and use monotonic time. The app checks approximately every four minutes and requires an internet connection. A failed check never deletes local documents.
 
-This is an application access gate, not tamper-proof DRM. The underlying engine/CLI is not a secure boundary against a local developer. The desktop control server is disabled. Standalone engine/CLI and web access need separate entitlement enforcement before they are sold as gated features. Test cancellation, trial expiration, outages and saving unsaved work before release. There is not an independent free trial started by the desktop: it follows the customer's existing Stripe trial, avoiding repeated trial resets per installation.
+This is an application access gate, not tamper-proof DRM. The underlying engine/CLI is not a secure boundary against a local developer. The desktop control server is disabled. Standalone engine/CLI and web access need separate entitlement enforcement before they are sold as gated features. Test revocation, expired security leases, outages and saving unsaved work before release. The desktop does not create a billing trial. The production account service grants free early access; short security leases and explicit device approval remain enforced.
 
 ## Updates
 

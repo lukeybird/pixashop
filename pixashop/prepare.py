@@ -21,7 +21,7 @@ def patch(path, old, new):
     p.write_text(text.replace(old, new), encoding='utf-8')
 
 def prepare():
-    patch('Cargo.toml', 'version = "0.20.1"', 'version = "0.20.4"')
+    patch('Cargo.toml', 'version = "0.20.1"', 'version = "0.20.5"')
     # Display strings and translated catalogs; preserve contributor credits and legal notices.
     for parent in ['apps', 'crates', 'packaging']:
         for p in (ROOT / parent).rglob('*'):
